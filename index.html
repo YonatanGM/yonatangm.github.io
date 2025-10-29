@@ -99,76 +99,7 @@
 
     .hero-title .letter {
       display: inline-block;
-      opacity: 0;
-      animation: explodeLetter 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-      position: relative;
-    }
-    
-    /* Each letter explodes from different directions */
-    .hero-title .letter:nth-child(1) { animation-delay: 0s; --explode-x: -200px; --explode-y: -100px; --explode-rotate: -180deg; }
-    .hero-title .letter:nth-child(2) { animation-delay: 0.1s; --explode-x: 150px; --explode-y: -150px; --explode-rotate: 120deg; }
-    .hero-title .letter:nth-child(3) { animation-delay: 0.2s; --explode-x: -180px; --explode-y: 120px; --explode-rotate: -90deg; }
-    .hero-title .letter:nth-child(4) { animation-delay: 0.3s; --explode-x: 200px; --explode-y: -80px; --explode-rotate: 240deg; }
-    .hero-title .letter:nth-child(5) { animation-delay: 0.4s; --explode-x: -120px; --explode-y: 150px; --explode-rotate: -220deg; }
-    .hero-title .letter:nth-child(6) { animation-delay: 0.5s; --explode-x: 180px; --explode-y: 100px; --explode-rotate: 160deg; }
-    .hero-title .letter:nth-child(7) { animation-delay: 0.6s; --explode-x: -150px; --explode-y: -120px; --explode-rotate: -270deg; }
-    .hero-title .letter:nth-child(8) { animation-delay: 0.7s; --explode-x: 100px; --explode-y: 140px; --explode-rotate: 200deg; }
-    .hero-title .letter:nth-child(9) { animation-delay: 0.8s; --explode-x: -100px; --explode-y: -140px; --explode-rotate: -120deg; }
-    .hero-title .letter:nth-child(10) { animation-delay: 0.9s; --explode-x: 140px; --explode-y: -100px; --explode-rotate: 300deg; }
-    .hero-title .letter:nth-child(11) { animation-delay: 1s; --explode-x: -140px; --explode-y: 100px; --explode-rotate: -150deg; }
-    .hero-title .letter:nth-child(12) { animation-delay: 1.1s; --explode-x: 160px; --explode-y: 120px; --explode-rotate: 140deg; }
-    .hero-title .letter:nth-child(13) { animation-delay: 1.2s; --explode-x: -160px; --explode-y: -90px; --explode-rotate: -200deg; }
-    .hero-title .letter:nth-child(14) { animation-delay: 1.3s; --explode-x: 120px; --explode-y: 90px; --explode-rotate: 180deg; }
-    .hero-title .letter:nth-child(15) { animation-delay: 1.4s; --explode-x: -90px; --explode-y: 130px; --explode-rotate: -100deg; }
-    .hero-title .letter:nth-child(16) { animation-delay: 1.5s; --explode-x: 130px; --explode-y: -130px; --explode-rotate: 220deg; }
-    .hero-title .letter:nth-child(17) { animation-delay: 1.6s; --explode-x: -130px; --explode-y: 80px; --explode-rotate: -240deg; }
-    .hero-title .letter:nth-child(18) { animation-delay: 1.7s; --explode-x: 110px; --explode-y: -110px; --explode-rotate: 260deg; }
-
-    @keyframes explodeLetter {
-      0% {
-        transform: translate(var(--explode-x), var(--explode-y)) rotate(var(--explode-rotate)) scale(0.2);
-        opacity: 0;
-      }
-      60% {
-        transform: translate(0, 0) rotate(calc(var(--explode-rotate) * 0.1)) scale(1.15);
-        opacity: 1;
-      }
-      80% {
-        transform: translate(0, 0) rotate(calc(var(--explode-rotate) * -0.05)) scale(0.95);
-      }
-      100% { 
-        transform: translate(0, 0) rotate(0deg) scale(1);
-        opacity: 1;
-      }
-    }
-    
-    /* Subtle floating animation after letters settle */
-    .hero-title .letter {
-      animation: explodeLetter 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
-                 floatLetter 3s ease-in-out 2s infinite;
-    }
-    
-    @keyframes floatLetter {
-      0%, 100% {
-        transform: translateY(0) rotate(0deg);
-      }
-      25% {
-        transform: translateY(-3px) rotate(1deg);
-      }
-      50% {
-        transform: translateY(0) rotate(0deg);
-      }
-      75% {
-        transform: translateY(3px) rotate(-1deg);
-      }
-    }
-    
-    /* Different float timing for each letter */
-    .hero-title .letter:nth-child(odd) {
-      animation-delay: 0s, 2.2s;
-    }
-    .hero-title .letter:nth-child(even) {
-      animation-delay: 0s, 2.5s;
+      opacity: 1;
     }
     
     /* CONTACT - Top-right corner → Center top */
@@ -435,6 +366,56 @@
       transform: scale(1.08) !important;
       box-shadow: 0 20px 60px rgba(255, 255, 255, 0.3);
     }
+
+    /* Overlay Styling */
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.95); /* Light overlay */
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .overlay.active {
+      display: flex;
+    }
+    .overlay-content {
+      position: relative;
+      background-color: #ffffff; /* White background */
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 90%;
+      max-height: 85vh;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    .overlay-content video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+    }
+    .close-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background-color: #e0e0e0; /* Light gray */
+      color: #2c2c2c; /* Dark text */
+      border: none;
+      font-size: 1rem;
+      padding: 0.3rem 0.6rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    .close-btn:hover {
+      background-color: #c0c0c0; /* Darker gray on hover */
+    }
   </style>
 </head>pa
 <body>
@@ -473,11 +454,36 @@
       </div>
     </div>
 
-    <!--  SCROLL-SHUFFLE VIEWPORT -->
-    <div class="section-card">
-      <div class="video-viewport" id="videoViewport"></div>
+    <!-- 3D CARD (Soft Neutral) -->
+    <div class="section-card card-3d" id="card3D">
+      <!-- Removed section-title as per user request -->
+      <div class="multi-column" id="multiCol3D">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+      </div>
+    </div>
+
+    <!-- TOUCH CARD (Soft Neutral) -->
+    <div class="section-card card-touch" id="cardTouch">
+      <!-- Removed section-title as per user request -->
+      <div class="multi-column" id="multiColTouch">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+      </div>
     </div>
   </div> <!-- end page-wrapper -->
+
+  <!-- DESKTOP OVERLAY -->
+  <div class="overlay" id="desktopOverlay">
+    <div class="overlay-content">
+      <button class="close-btn" id="closeBtn">X</button>
+      <video id="overlayVideo" controls></video>
+    </div>
+  </div>
 
   <script>
 
@@ -489,16 +495,12 @@
 
     function setHeroTitle(text) {
       heroTitleEl.innerHTML = "";
-      let delay = 0;
       for (let i = 0; i < text.length; i++) {
         const char = text[i];
         const span = document.createElement('span');
         span.classList.add('letter');
-        span.style.animationName = 'popIn';
-        span.style.animationDelay = delay + 's';
         span.innerText = char === " " ? "\u00A0" : char;
         heroTitleEl.appendChild(span);
-        delay += 0.05;
       }
     }
 
@@ -527,141 +529,221 @@
 
   <script>
     /*************************************************************
-     * 3) SCROLL-SHUFFLE VIDEO VIEWPORT
+     * 3) CREATE & LAZY-LOAD videos for 3D & Touch
      *************************************************************/
-    const viewport = document.getElementById('videoViewport');
-    
-    // All videos combined
-    const allVideos = [
-      "video12.mp4", "video9.mp4", "video13.mp4", "mov32.mp4", "video11.mp4",
-      "mov30.mp4", "mov33.mp4", "mov22.mp4", "video0.mp4", "mov24.mp4",
-      "video3.mp4", "video4.mp4", "video5.mp4", "video6.mp4", "video8.mp4",
-      "video10.mp4", "video14.mp4", "video15.mp4", "video16.mp4", "video17.mp4",
-      "Movie99.mp4", "Movie10.mp4", "Movie11.mp4", "Movie18.mp4", "Movie21.mp4",
-      "Movie27.mp4", "Movie31.mp4", "Movie41.mp4", "Movie56.mp4", "Movie62.mp4",
-      "Movie9.mp4", "Movie42.mp4"
+    const threeDCount = 18;
+    const touchCount = 18;
+    const multiCol3D = document.getElementById('multiCol3D').children;
+    const multiColTouch = document.getElementById('multiColTouch').children;
+
+    // Hardcoded arrays with video file names (just the base names)
+    const threeDVideos = [
+      "video12.mp4", "video9.mp4",  "video13.mp4", "mov32.mp4", "video11.mp4", "mov30.mp4", "mov33.mp4", "mov22.mp4",
+      "video0.mp4", /* "video1.mp4" */, "mov24.mp4",
+      "video3.mp4", "video4.mp4", "video5.mp4",
+      "video6.mp4", "video8.mp4", "video10.mp4",
+      /*"video7.mp4"*/, "video14.mp4",
+      "video15.mp4", "video16.mp4", "video17.mp4",
+    ].reverse();
+
+    const touchVideos = [
+      "Movie99.mp4",
+      "Movie10.mp4",
+      "Movie11.mp4",
+      "Movie18.mp4",
+      "Movie21.mp4",
+      "Movie27.mp4",
+      "Movie31.mp4",
+      // "Movie40.mp4",
+      "Movie41.mp4",
+      "Movie56.mp4",
+      "Movie62.mp4",
+      "Movie9.mp4",
+      "Movie42.mp4"
     ];
-    
-    const CARDS_VISIBLE = 6;
-    const videoCards = [];
-    let currentVideoIndex = 0;
-    let lastScrollY = 0;
-    let isShuffling = false;
-    
-    // Create video cards
-    for (let i = 0; i < CARDS_VISIBLE; i++) {
-      const card = document.createElement('div');
-      card.className = 'video-card';
+
+    // Fill 3D videos with random scatter positions
+    threeDVideos.forEach((video, index) => {
+      const vid = document.createElement('video');
+      vid.className = 'rect-video';
+      vid.dataset.src = `assets/${video}`;
+      vid.preload = 'auto';
+      vid.muted = true;
+      vid.playsInline = true;
+      vid.loading = 'lazy';
       
-      const video = document.createElement('video');
-      video.muted = true;
-      video.playsInline = true;
-      video.loop = true;
-      video.preload = 'metadata';
-      video.src = `assets/${allVideos[i % allVideos.length]}`;
+      // Random scatter position
+      const scatterX = (Math.random() - 0.5) * 800; // -400 to 400
+      const scatterY = (Math.random() - 0.5) * 600; // -300 to 300
+      const scatterRotate = (Math.random() - 0.5) * 180; // -90 to 90
       
-      card.appendChild(video);
-      viewport.appendChild(card);
-      videoCards.push({ 
-        element: card, 
-        video: video, 
-        videoIndex: i % allVideos.length 
-      });
+      vid.style.setProperty('--scatter-x', `${scatterX}px`);
+      vid.style.setProperty('--scatter-y', `${scatterY}px`);
+      vid.style.setProperty('--scatter-rotate', `${scatterRotate}deg`);
       
-      // Hover to play
-      card.addEventListener('mouseenter', () => video.play());
-      card.addEventListener('mouseleave', () => video.pause());
+      multiCol3D[index % 4].appendChild(vid);
+    });
+
+    // Fill Touch videos with random scatter positions
+    touchVideos.forEach((video, index) => {
+      const vid = document.createElement('video');
+      vid.className = 'rect-video';
+      vid.dataset.src = `assets/${video}`;
+      vid.preload = 'auto';
+      vid.muted = true;
+      vid.playsInline = true;
+      vid.loading = 'lazy';
       
-      // Tap to play on mobile
-      card.addEventListener('touchstart', () => {
-        if (video.paused) video.play();
-        else video.pause();
-      });
-    }
-    
-    // Random position generator
-    function getRandomPosition(index, total) {
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const cardWidth = Math.min(400, vw * 0.3);
-      const cardHeight = cardWidth * 0.6;
+      // Random scatter position
+      const scatterX = (Math.random() - 0.5) * 800;
+      const scatterY = (Math.random() - 0.5) * 600;
+      const scatterRotate = (Math.random() - 0.5) * 180;
       
-      // Create scattered positions with some spacing
-      const angle = (index / total) * Math.PI * 2 + Math.random() * 0.5;
-      const radius = Math.min(vw, vh) * (0.15 + Math.random() * 0.2);
+      vid.style.setProperty('--scatter-x', `${scatterX}px`);
+      vid.style.setProperty('--scatter-y', `${scatterY}px`);
+      vid.style.setProperty('--scatter-rotate', `${scatterRotate}deg`);
       
-      const centerX = vw / 2;
-      const centerY = vh / 2;
-      
-      const x = centerX + Math.cos(angle) * radius - cardWidth / 2;
-      const y = centerY + Math.sin(angle) * radius - cardHeight / 2;
-      
-      // Constrain to viewport with margins
-      const margin = 30;
-      const finalX = Math.max(margin, Math.min(x, vw - cardWidth - margin));
-      const finalY = Math.max(margin, Math.min(y, vh - cardHeight - margin));
-      
-      return { x: finalX, y: finalY };
-    }
-    
-    // Shuffle cards to new positions
-    function shuffleCards(animate = true) {
-      videoCards.forEach((card, index) => {
-        const pos = getRandomPosition(index, CARDS_VISIBLE);
-        const rotation = (Math.random() - 0.5) * 20;
-        const scale = 0.85 + Math.random() * 0.3;
-        const zIndex = Math.floor(Math.random() * CARDS_VISIBLE);
-        
-        if (animate) {
-          card.element.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-        } else {
-          card.element.style.transition = 'none';
-        }
-        
-        card.element.style.transform = `translate(${pos.x}px, ${pos.y}px) rotate(${rotation}deg) scale(${scale})`;
-        card.element.style.zIndex = zIndex;
-        
-        setTimeout(() => {
-          card.element.classList.add('visible');
-        }, index * 50);
-      });
-    }
-    
-    // Initial shuffle
-    shuffleCards(false);
-    
-    // Scroll handler - shuffle on scroll movement
-    let scrollTimeout;
-    window.addEventListener('scroll', () => {
-      const scrollY = window.scrollY;
-      const scrollDelta = Math.abs(scrollY - lastScrollY);
-      
-      // Detect scroll movement (threshold 100px)
-      if (scrollDelta > 100 && !isShuffling) {
-        isShuffling = true;
-        
-        // Shuffle to new arrangement
-        shuffleCards(true);
-        
-        // Cycle to next video set
-        if (scrollY > lastScrollY) {
-          // Scrolling down - load next video in rotation
-          const oldestCard = videoCards.shift();
-          videoCards.push(oldestCard);
+      multiColTouch[index % 4].appendChild(vid);
+    });
+
+    const allVids = document.querySelectorAll('.rect-video');
+  </script>
+
+  <script>
+    /*************************************************************
+     * 4) LAZY LOADING + SCATTER-TO-GRID ANIMATION
+     *************************************************************/
+    const lazyObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const vid = entry.target;
           
-          currentVideoIndex = (currentVideoIndex + 1) % allVideos.length;
-          oldestCard.video.src = `assets/${allVideos[currentVideoIndex]}`;
-          oldestCard.videoIndex = currentVideoIndex;
+          // Load video
+          if (vid.dataset.src) {
+            vid.src = vid.dataset.src;
+            vid.load();
+          }
+          
+          // Trigger organization animation with stagger
+          setTimeout(() => {
+            vid.classList.add('organized');
+          }, Math.random() * 600); // Random stagger 0-600ms
+          
+          lazyObserver.unobserve(vid);
         }
-        
-        lastScrollY = scrollY;
-        
-        setTimeout(() => {
-          isShuffling = false;
-        }, 700);
-      }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '100px'
+    });
+    
+    allVids.forEach(vid => lazyObserver.observe(vid));
+  </script>
+
+  <script>
+    /*************************************************************
+     * 5) HOVER-TO-PLAY => Desktop
+     *************************************************************/
+    allVids.forEach(video => {
+      video.addEventListener('mouseover', e => {
+        e.currentTarget.muted = true;
+        try { e.currentTarget.play(); }
+        catch(err) { if (err.name !== "AbortError") console.log(err); }
+      });
+      video.addEventListener('mouseleave', e => {
+        try { e.currentTarget.pause(); }
+        catch(err) { if (err.name !== "AbortError") console.log(err); }
+      });
     });
   </script>
 
+  <script>
+    /*************************************************************
+     * 6) DESKTOP OVERLAY => click
+     *************************************************************/
+    const desktopOverlay = document.getElementById('desktopOverlay');
+    const overlayVideo = document.getElementById('overlayVideo');
+    const closeBtn = document.getElementById('closeBtn');
+
+    function handleDesktopClick(e) {
+      if (window.innerWidth >= 1024) {
+        desktopOverlay.classList.add('active');
+        overlayVideo.src = e.currentTarget.src;
+        overlayVideo.play();
+      }
+    }
+    allVids.forEach(video => {
+      video.addEventListener('click', handleDesktopClick);
+    });
+
+    closeBtn.addEventListener('click', () => {
+      desktopOverlay.classList.remove('active');
+      overlayVideo.pause();
+      overlayVideo.src = "";
+    });
+  </script>
+
+  <script>
+    /*************************************************************
+     * 7) MOBILE PRESS-AND-HOLD => play
+     *************************************************************/
+    let mediaQuery = window.matchMedia('(max-width: 600px)');
+    function handleMobileHold(mq) {
+      allVids.forEach(video => {
+        // Remove old
+        video.removeEventListener('touchstart', onTouchStart);
+        video.removeEventListener('touchmove', onTouchMove);
+        video.removeEventListener('touchend', onTouchEnd);
+        if (mq.matches) {
+          video.addEventListener('touchstart', onTouchStart);
+          video.addEventListener('touchmove', onTouchMove);
+          video.addEventListener('touchend', onTouchEnd);
+        }
+      });
+    }
+
+    let timer = null;
+    let startX = 0, startY = 0;
+    const threshold = 10;
+    const holdTime = 500;
+    let isPlaying = false;
+
+    function onTouchStart(e) {
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+      isPlaying = false;
+
+      const vid = e.currentTarget;
+      timer = setTimeout(() => {
+        try {
+          vid.play();
+          isPlaying = true;
+        } catch(err) { if (err.name !== "AbortError") console.log(err); }
+      }, holdTime);
+    }
+
+    function onTouchMove(e) {
+      const touch = e.touches[0];
+      const deltaX = Math.abs(touch.clientX - startX);
+      const deltaY = Math.abs(touch.clientY - startY);
+      if (deltaX > threshold || deltaY > threshold) {
+        clearTimeout(timer);
+      }
+    }
+
+    function onTouchEnd(e) {
+      clearTimeout(timer);
+      const vid = e.currentTarget;
+      if (isPlaying) {
+        try { vid.pause(); }
+        catch(err) { if (err.name !== "AbortError") console.log(err); }
+      }
+      isPlaying = false;
+    }
+
+    handleMobileHold(mediaQuery);
+    mediaQuery.addEventListener('change', handleMobileHold);
+  </script>
 </body>
 </html>
