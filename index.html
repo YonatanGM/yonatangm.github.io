@@ -37,21 +37,28 @@
     }
 
     /************************************************************
-     * BLEND MODE TEXT HEADER - Text that stays visible with blend
+     * BLEND MODE TEXT HEADER - Fixed overlay with blend mode
      ************************************************************/
     
-    /* Page wrapper needs to be positioned */
-    .page-wrapper {
+    body {
       position: relative;
     }
     
+    /* Page wrapper - content scrolls normally */
+    .page-wrapper {
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Hero container - fixed on top but with mix-blend-mode */
     .hero-container {
-      position: absolute;
+      position: fixed;
       top: 2rem;
       left: 1rem;
       right: 1rem;
-      z-index: 2000;
+      z-index: 10;
       pointer-events: none;
+      mix-blend-mode: difference; /* Apply blend to entire container */
     }
     
     /* Make interactive elements clickable */
@@ -60,17 +67,14 @@
       pointer-events: auto;
     }
 
-    /* Large title with blend mode - now in same context as scrolling content */
+    /* Large title */
     .hero-title {
       font-size: clamp(3rem, 8vw, 6rem);
       font-weight: 700;
       color: #ffffff;
       letter-spacing: -0.03em;
       margin: 0;
-      mix-blend-mode: difference;
       line-height: 1;
-      position: sticky;
-      top: 2rem;
     }
 
     .hero-title .letter {
@@ -83,22 +87,20 @@
       to { transform: scale(1); }
     }
 
-    /* Contact icons - sticky in top right */
+    /* Contact icons */
     .contact-row {
-      position: sticky;
-      top: 2rem;
+      position: absolute;
+      top: 0;
+      right: 0;
       display: flex;
       gap: 1.5rem;
-      justify-content: flex-end;
-      margin-bottom: 1rem;
     }
 
     .contact-row a {
       color: #ffffff;
       font-size: 28px;
       text-decoration: none;
-      transition: all 0.3s ease;
-      mix-blend-mode: difference;
+      transition: transform 0.3s ease;
     }
     
     .contact-row a:hover {
@@ -107,11 +109,9 @@
     
     /* Navigation pills - below title */
     .nav-pills {
-      position: sticky;
-      top: calc(2rem + 6rem + 1rem);
+      margin-top: calc(6rem + 1rem);
       display: flex;
       gap: 2rem;
-      margin-top: 1rem;
     }
     
     .nav-pills a {
@@ -124,8 +124,7 @@
       color: #ffffff;
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      transition: all 0.3s ease;
-      mix-blend-mode: difference;
+      transition: opacity 0.3s ease;
     }
     
     .nav-pills a:hover {
@@ -148,13 +147,15 @@
     }
 
     @media (max-width: 768px) {
-      .hero-title {
-        font-size: clamp(2rem, 10vw, 3rem);
+      .hero-container {
         top: 1rem;
       }
       
+      .hero-title {
+        font-size: clamp(2rem, 10vw, 3rem);
+      }
+      
       .contact-row {
-        top: 1rem;
         gap: 1rem;
       }
       
@@ -163,7 +164,7 @@
       }
       
       .nav-pills {
-        top: calc(1rem + 3rem + 1rem);
+        margin-top: calc(3rem + 1rem);
         flex-direction: column;
         gap: 0.8rem;
       }
