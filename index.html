@@ -37,7 +37,7 @@
     }
 
     /************************************************************
-     * BLEND MODE TEXT HEADER - Fixed overlay with blend mode
+     * BLEND MODE TEXT HEADER - Corner signature style
      ************************************************************/
     
     body {
@@ -50,25 +50,18 @@
       z-index: 1;
     }
     
-    /* Hero container - fixed on top but with mix-blend-mode */
+    /* Hero container - fixed in top-left corner */
     .hero-container {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 2rem;
+      left: 2rem;
       z-index: 10;
       pointer-events: none;
-      mix-blend-mode: difference; /* Apply blend to entire container */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
+      mix-blend-mode: difference;
+      max-width: 280px;
     }
     
     .hero-content {
-      max-width: 1200px;
-      width: 100%;
       position: relative;
     }
     
@@ -78,15 +71,15 @@
       pointer-events: auto;
     }
 
-    /* Large title - centered and bold */
+    /* Compact title - no wrapping */
     .hero-title {
-      font-size: clamp(3.5rem, 10vw, 8rem);
-      font-weight: 800;
+      font-size: 1.8rem;
+      font-weight: 700;
       color: #ffffff;
-      letter-spacing: -0.04em;
-      margin: 0 0 1.5rem 0;
-      line-height: 0.9;
-      text-align: center;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.8rem 0;
+      line-height: 1.1;
+      white-space: nowrap;
     }
 
     .hero-title .letter {
@@ -103,97 +96,96 @@
       }
     }
     
-    /* Bio text - centered below title */
+    /* Compact bio text */
     .hero-about {
-      line-height: 1.6;
-      font-size: 1rem;
+      line-height: 1.5;
+      font-size: 0.75rem;
       color: #ffffff;
-      text-align: center;
-      max-width: 600px;
-      margin: 0 auto 2rem auto;
+      margin-bottom: 1rem;
       font-weight: 400;
+      opacity: 0.9;
     }
 
-    /* Contact icons - centered below bio */
+    /* Contact icons - horizontal row */
     .contact-row {
       display: flex;
-      gap: 2rem;
-      justify-content: center;
-      margin-bottom: 2rem;
+      gap: 1rem;
+      margin-bottom: 1rem;
     }
 
     .contact-row a {
       color: #ffffff;
-      font-size: 28px;
+      font-size: 18px;
       text-decoration: none;
       transition: transform 0.3s ease;
     }
     
     .contact-row a:hover {
-      transform: translateY(-3px) scale(1.1);
+      transform: translateY(-2px) scale(1.1);
     }
     
-    /* Navigation pills - centered at bottom */
+    /* Navigation pills - vertical stack */
     .nav-pills {
       display: flex;
-      gap: 2.5rem;
-      justify-content: center;
+      flex-direction: column;
+      gap: 0.6rem;
     }
     
     .nav-pills a {
       position: relative;
       display: inline-block;
-      padding: 0.5rem 0;
       text-decoration: none;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       font-weight: 600;
       color: #ffffff;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       transition: opacity 0.3s ease;
+      padding-left: 0;
     }
     
     .nav-pills a:hover {
       opacity: 0.7;
+      padding-left: 4px;
     }
     
-    .nav-pills a.active::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: #ffffff;
+    .nav-pills a.active::before {
+      content: '→ ';
+      margin-right: 4px;
     }
 
     @media (max-width: 768px) {
       .hero-container {
-        padding: 1.5rem;
+        top: 1rem;
+        left: 1rem;
+        max-width: 200px;
       }
       
       .hero-title {
-        font-size: clamp(2.5rem, 12vw, 4rem);
-        margin-bottom: 1rem;
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
       }
       
       .hero-about {
-        font-size: 0.9rem;
-        margin-bottom: 1.5rem;
+        font-size: 0.65rem;
+        margin-bottom: 0.7rem;
       }
       
       .contact-row {
-        gap: 1.5rem;
-        margin-bottom: 1.5rem;
+        gap: 0.8rem;
+        margin-bottom: 0.7rem;
       }
       
       .contact-row a {
-        font-size: 24px;
+        font-size: 16px;
       }
       
       .nav-pills {
-        gap: 1.5rem;
-        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      
+      .nav-pills a {
+        font-size: 0.7rem;
       }
     }
 
