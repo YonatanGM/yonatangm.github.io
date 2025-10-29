@@ -317,55 +317,86 @@
     }
 
     /************************************************************
-     * SECTION CARDS - SCROLL-SHUFFLE VIEWPORT
+     * SECTION CARDS - SCROLL-REVEAL POPUPS
      ************************************************************/
     .section-card {
       position: relative;
-      min-height: 500vh; /* Long scroll for shuffling effect */
       background-color: #000000;
       border: none;
+      padding-bottom: 4rem;
     }
     
-    /* Fixed viewport for jumbled video cards */
-    .video-viewport {
-      position: fixed;
-      top: 0;
-      left: 0;
+    /* Multi-column grid */
+    .multi-column {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      padding: 1rem;
+      padding-top: 200px;
+    }
+    
+    .col {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    /* Video with popup container */
+    .video-row {
+      position: relative;
       width: 100%;
-      height: 100vh;
-      z-index: 1;
-      pointer-events: none;
+      min-height: 300px;
+      overflow: hidden; /* Crop popups at row boundaries */
     }
     
-    /* Video card - jumbled, overlapping */
-    .video-card {
-      position: absolute;
-      width: clamp(250px, 30vw, 400px);
-      height: auto;
-      border-radius: 4px;
-      overflow: hidden;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-      pointer-events: auto;
-      cursor: pointer;
-      opacity: 0;
-    }
-    
-    .video-card.visible {
-      opacity: 1;
-    }
-    
-    .video-card video {
+    .rect-video {
       width: 100%;
       height: auto;
       display: block;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: transform 0.3s ease;
     }
     
-    .video-card:hover {
-      z-index: 100 !important;
-      transform: scale(1.08) !important;
-      box-shadow: 0 20px 60px rgba(255, 255, 255, 0.3);
+    .rect-video:hover {
+      transform: scale(1.02);
     }
+    
+    /* Popup shapes container - positioned absolutely within row */
+    .popup-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    /* Individual popup shape */
+    .popup-shape {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 8px;
+      transform: scale(0);
+      opacity: 0;
+      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .popup-shape.visible {
+      transform: scale(1);
+      opacity: 1;
+    }
+    
+    /* Different colors for demo */
+    .popup-shape:nth-child(1) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .popup-shape:nth-child(2) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .popup-shape:nth-child(3) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+    .popup-shape:nth-child(4) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+    .popup-shape:nth-child(5) { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
 
     /* Overlay Styling */
     .overlay {
@@ -529,221 +560,136 @@
 
   <script>
     /*************************************************************
-     * 3) CREATE & LAZY-LOAD videos for 3D & Touch
+     * 3) CREATE VIDEOS WITH SCROLL-REVEAL POPUPS
      *************************************************************/
-    const threeDCount = 18;
-    const touchCount = 18;
     const multiCol3D = document.getElementById('multiCol3D').children;
     const multiColTouch = document.getElementById('multiColTouch').children;
 
-    // Hardcoded arrays with video file names (just the base names)
+    // Video files
     const threeDVideos = [
-      "video12.mp4", "video9.mp4",  "video13.mp4", "mov32.mp4", "video11.mp4", "mov30.mp4", "mov33.mp4", "mov22.mp4",
-      "video0.mp4", /* "video1.mp4" */, "mov24.mp4",
-      "video3.mp4", "video4.mp4", "video5.mp4",
-      "video6.mp4", "video8.mp4", "video10.mp4",
-      /*"video7.mp4"*/, "video14.mp4",
-      "video15.mp4", "video16.mp4", "video17.mp4",
+      "video12.mp4", "video9.mp4", "video13.mp4", "mov32.mp4", "video11.mp4", 
+      "mov30.mp4", "mov33.mp4", "mov22.mp4", "video0.mp4", "mov24.mp4",
+      "video3.mp4", "video4.mp4", "video5.mp4", "video6.mp4", "video8.mp4", 
+      "video10.mp4", "video14.mp4", "video15.mp4", "video16.mp4", "video17.mp4",
     ].reverse();
 
     const touchVideos = [
-      "Movie99.mp4",
-      "Movie10.mp4",
-      "Movie11.mp4",
-      "Movie18.mp4",
-      "Movie21.mp4",
-      "Movie27.mp4",
-      "Movie31.mp4",
-      // "Movie40.mp4",
-      "Movie41.mp4",
-      "Movie56.mp4",
-      "Movie62.mp4",
-      "Movie9.mp4",
-      "Movie42.mp4"
+      "Movie99.mp4", "Movie10.mp4", "Movie11.mp4", "Movie18.mp4", "Movie21.mp4",
+      "Movie27.mp4", "Movie31.mp4", "Movie41.mp4", "Movie56.mp4", "Movie62.mp4",
+      "Movie9.mp4", "Movie42.mp4"
     ];
-
-    // Fill 3D videos with random scatter positions
-    threeDVideos.forEach((video, index) => {
-      const vid = document.createElement('video');
-      vid.className = 'rect-video';
-      vid.dataset.src = `assets/${video}`;
-      vid.preload = 'auto';
-      vid.muted = true;
-      vid.playsInline = true;
-      vid.loading = 'lazy';
-      
-      // Random scatter position
-      const scatterX = (Math.random() - 0.5) * 800; // -400 to 400
-      const scatterY = (Math.random() - 0.5) * 600; // -300 to 300
-      const scatterRotate = (Math.random() - 0.5) * 180; // -90 to 90
-      
-      vid.style.setProperty('--scatter-x', `${scatterX}px`);
-      vid.style.setProperty('--scatter-y', `${scatterY}px`);
-      vid.style.setProperty('--scatter-rotate', `${scatterRotate}deg`);
-      
-      multiCol3D[index % 4].appendChild(vid);
-    });
-
-    // Fill Touch videos with random scatter positions
-    touchVideos.forEach((video, index) => {
-      const vid = document.createElement('video');
-      vid.className = 'rect-video';
-      vid.dataset.src = `assets/${video}`;
-      vid.preload = 'auto';
-      vid.muted = true;
-      vid.playsInline = true;
-      vid.loading = 'lazy';
-      
-      // Random scatter position
-      const scatterX = (Math.random() - 0.5) * 800;
-      const scatterY = (Math.random() - 0.5) * 600;
-      const scatterRotate = (Math.random() - 0.5) * 180;
-      
-      vid.style.setProperty('--scatter-x', `${scatterX}px`);
-      vid.style.setProperty('--scatter-y', `${scatterY}px`);
-      vid.style.setProperty('--scatter-rotate', `${scatterRotate}deg`);
-      
-      multiColTouch[index % 4].appendChild(vid);
-    });
-
-    const allVids = document.querySelectorAll('.rect-video');
-  </script>
-
-  <script>
-    /*************************************************************
-     * 4) LAZY LOADING + SCATTER-TO-GRID ANIMATION
-     *************************************************************/
-    const lazyObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const vid = entry.target;
-          
-          // Load video
-          if (vid.dataset.src) {
-            vid.src = vid.dataset.src;
-            vid.load();
-          }
-          
-          // Trigger organization animation with stagger
-          setTimeout(() => {
-            vid.classList.add('organized');
-          }, Math.random() * 600); // Random stagger 0-600ms
-          
-          lazyObserver.unobserve(vid);
-        }
-      });
-    }, {
-      threshold: 0.1,
-      rootMargin: '100px'
-    });
     
-    allVids.forEach(vid => lazyObserver.observe(vid));
-  </script>
+    // Define which videos have popups (for demo: first 3 of each section)
+    const videosWithPopups = {
+      0: 3,  // First 3D video has 3 popups
+      1: 2,  // Second has 2 popups
+      4: 4,  // Fifth has 4 popups
+    };
 
-  <script>
-    /*************************************************************
-     * 5) HOVER-TO-PLAY => Desktop
-     *************************************************************/
-    allVids.forEach(video => {
-      video.addEventListener('mouseover', e => {
-        e.currentTarget.muted = true;
-        try { e.currentTarget.play(); }
-        catch(err) { if (err.name !== "AbortError") console.log(err); }
-      });
-      video.addEventListener('mouseleave', e => {
-        try { e.currentTarget.pause(); }
-        catch(err) { if (err.name !== "AbortError") console.log(err); }
-      });
-    });
-  </script>
-
-  <script>
-    /*************************************************************
-     * 6) DESKTOP OVERLAY => click
-     *************************************************************/
-    const desktopOverlay = document.getElementById('desktopOverlay');
-    const overlayVideo = document.getElementById('overlayVideo');
-    const closeBtn = document.getElementById('closeBtn');
-
-    function handleDesktopClick(e) {
-      if (window.innerWidth >= 1024) {
-        desktopOverlay.classList.add('active');
-        overlayVideo.src = e.currentTarget.src;
-        overlayVideo.play();
+    // Create video rows with popup containers
+    function createVideoRow(videoFile, colIndex, videoIndex, hasPopups = 0) {
+      const row = document.createElement('div');
+      row.className = 'video-row';
+      row.dataset.videoIndex = videoIndex;
+      
+      // Create video
+      const vid = document.createElement('video');
+      vid.className = 'rect-video';
+      vid.src = `assets/${videoFile}`;
+      vid.muted = true;
+      vid.loop = true;
+      vid.playsInline = true;
+      
+      row.appendChild(vid);
+      
+      // Add popup container if this video has popups
+      if (hasPopups > 0) {
+        const popupContainer = document.createElement('div');
+        popupContainer.className = 'popup-container';
+        row.dataset.popups = hasPopups;
+        row.dataset.revealed = 0;
+        
+        // Create popup shapes
+        for (let i = 0; i < hasPopups; i++) {
+          const shape = document.createElement('div');
+          shape.className = 'popup-shape';
+          shape.dataset.index = i;
+          
+          // Random position within row (favor left side for black space)
+          const x = Math.random() * 40; // 0-40% from left
+          const y = Math.random() * 70 + 10; // 10-80% from top
+          const size = 150 + Math.random() * 150; // 150-300px
+          
+          shape.style.left = `${x}%`;
+          shape.style.top = `${y}%`;
+          shape.style.width = `${size}px`;
+          shape.style.height = `${size}px`;
+          shape.style.zIndex = i;
+          
+          popupContainer.appendChild(shape);
+        }
+        
+        row.appendChild(popupContainer);
       }
+      
+      // Hover to play
+      vid.addEventListener('mouseenter', () => vid.play());
+      vid.addEventListener('mouseleave', () => vid.pause());
+      
+      return row;
     }
-    allVids.forEach(video => {
-      video.addEventListener('click', handleDesktopClick);
+
+    // Fill 3D videos
+    threeDVideos.forEach((video, index) => {
+      const hasPopups = videosWithPopups[index] || 0;
+      const row = createVideoRow(video, index % 4, index, hasPopups);
+      multiCol3D[index % 4].appendChild(row);
     });
 
-    closeBtn.addEventListener('click', () => {
-      desktopOverlay.classList.remove('active');
-      overlayVideo.pause();
-      overlayVideo.src = "";
+    // Fill Touch videos  
+    touchVideos.forEach((video, index) => {
+      const row = createVideoRow(video, index % 4, index + threeDVideos.length, 0);
+      multiColTouch[index % 4].appendChild(row);
     });
+
+    const allVideoRows = document.querySelectorAll('.video-row');
   </script>
 
   <script>
     /*************************************************************
-     * 7) MOBILE PRESS-AND-HOLD => play
+     * 4) SCROLL-BASED POPUP REVEALS
      *************************************************************/
-    let mediaQuery = window.matchMedia('(max-width: 600px)');
-    function handleMobileHold(mq) {
-      allVids.forEach(video => {
-        // Remove old
-        video.removeEventListener('touchstart', onTouchStart);
-        video.removeEventListener('touchmove', onTouchMove);
-        video.removeEventListener('touchend', onTouchEnd);
-        if (mq.matches) {
-          video.addEventListener('touchstart', onTouchStart);
-          video.addEventListener('touchmove', onTouchMove);
-          video.addEventListener('touchend', onTouchEnd);
+    let lastScrollY = window.scrollY;
+    
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const scrollDelta = scrollY - lastScrollY;
+      
+      // Check each video row with popups
+      allVideoRows.forEach(row => {
+        const popupCount = parseInt(row.dataset.popups) || 0;
+        if (popupCount === 0) return;
+        
+        const rect = row.getBoundingClientRect();
+        const rowCenter = rect.top + rect.height / 2;
+        const viewportCenter = window.innerHeight / 2;
+        
+        // Is this row near viewport center?
+        if (Math.abs(rowCenter - viewportCenter) < rect.height / 2) {
+          const revealed = parseInt(row.dataset.revealed) || 0;
+          
+          // Scroll down to reveal more popups
+          if (scrollDelta > 0 && revealed < popupCount) {
+            const popups = row.querySelectorAll('.popup-shape');
+            popups[revealed].classList.add('visible');
+            row.dataset.revealed = revealed + 1;
+          }
         }
       });
-    }
-
-    let timer = null;
-    let startX = 0, startY = 0;
-    const threshold = 10;
-    const holdTime = 500;
-    let isPlaying = false;
-
-    function onTouchStart(e) {
-      const touch = e.touches[0];
-      startX = touch.clientX;
-      startY = touch.clientY;
-      isPlaying = false;
-
-      const vid = e.currentTarget;
-      timer = setTimeout(() => {
-        try {
-          vid.play();
-          isPlaying = true;
-        } catch(err) { if (err.name !== "AbortError") console.log(err); }
-      }, holdTime);
-    }
-
-    function onTouchMove(e) {
-      const touch = e.touches[0];
-      const deltaX = Math.abs(touch.clientX - startX);
-      const deltaY = Math.abs(touch.clientY - startY);
-      if (deltaX > threshold || deltaY > threshold) {
-        clearTimeout(timer);
-      }
-    }
-
-    function onTouchEnd(e) {
-      clearTimeout(timer);
-      const vid = e.currentTarget;
-      if (isPlaying) {
-        try { vid.pause(); }
-        catch(err) { if (err.name !== "AbortError") console.log(err); }
-      }
-      isPlaying = false;
-    }
-
-    handleMobileHold(mediaQuery);
-    mediaQuery.addEventListener('change', handleMobileHold);
+      
+      lastScrollY = scrollY;
+    });
   </script>
+
 </body>
 </html>
