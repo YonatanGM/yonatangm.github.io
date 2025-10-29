@@ -46,7 +46,8 @@
       right: 0;
       z-index: 2000;
       padding: 2rem 1rem;
-      pointer-events: none; /* Allow clicks to pass through to content below */
+      pointer-events: none;
+      isolation: isolate; /* Create blend mode context */
     }
     
     /* Make interactive elements clickable */
@@ -62,7 +63,7 @@
       color: #ffffff;
       letter-spacing: -0.03em;
       margin: 0;
-      mix-blend-mode: difference; /* Creates the "see-through" effect */
+      mix-blend-mode: exclusion; /* Better than difference for this effect */
       line-height: 1;
     }
 
@@ -91,7 +92,7 @@
       font-size: 28px;
       text-decoration: none;
       transition: all 0.3s ease;
-      mix-blend-mode: difference;
+      mix-blend-mode: exclusion;
     }
     
     .contact-row a:hover {
@@ -101,7 +102,7 @@
     /* Navigation pills - below title */
     .nav-pills {
       position: fixed;
-      top: calc(2rem + 6rem + 1rem); /* Below the large title */
+      top: calc(2rem + 6rem + 1rem);
       left: 1rem;
       display: flex;
       gap: 2rem;
@@ -119,7 +120,7 @@
       letter-spacing: 0.05em;
       text-transform: uppercase;
       transition: all 0.3s ease;
-      mix-blend-mode: difference;
+      mix-blend-mode: exclusion;
     }
     
     .nav-pills a:hover {
@@ -139,6 +140,12 @@
     /* Hide bio text - keeping it minimal */
     .hero-about {
       display: none;
+    }
+    
+    /* Page wrapper needs to be positioned for blend context */
+    .page-wrapper {
+      position: relative;
+      isolation: isolate;
     }
 
     @media (max-width: 768px) {
