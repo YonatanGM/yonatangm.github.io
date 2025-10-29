@@ -37,17 +37,21 @@
     }
 
     /************************************************************
-     * BLEND MODE TEXT HEADER - Fixed text with content showing through
+     * BLEND MODE TEXT HEADER - Text that stays visible with blend
      ************************************************************/
+    
+    /* Page wrapper needs to be positioned */
+    .page-wrapper {
+      position: relative;
+    }
+    
     .hero-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      position: absolute;
+      top: 2rem;
+      left: 1rem;
+      right: 1rem;
       z-index: 2000;
-      padding: 2rem 1rem;
       pointer-events: none;
-      isolation: isolate; /* Create blend mode context */
     }
     
     /* Make interactive elements clickable */
@@ -56,15 +60,17 @@
       pointer-events: auto;
     }
 
-    /* Large fixed title with blend mode */
+    /* Large title with blend mode - now in same context as scrolling content */
     .hero-title {
       font-size: clamp(3rem, 8vw, 6rem);
       font-weight: 700;
       color: #ffffff;
       letter-spacing: -0.03em;
       margin: 0;
-      mix-blend-mode: exclusion; /* Better than difference for this effect */
+      mix-blend-mode: difference;
       line-height: 1;
+      position: sticky;
+      top: 2rem;
     }
 
     .hero-title .letter {
@@ -77,14 +83,14 @@
       to { transform: scale(1); }
     }
 
-    /* Contact icons - always visible in top right */
+    /* Contact icons - sticky in top right */
     .contact-row {
-      position: fixed;
+      position: sticky;
       top: 2rem;
-      right: 1rem;
       display: flex;
       gap: 1.5rem;
-      z-index: 2001;
+      justify-content: flex-end;
+      margin-bottom: 1rem;
     }
 
     .contact-row a {
@@ -92,7 +98,7 @@
       font-size: 28px;
       text-decoration: none;
       transition: all 0.3s ease;
-      mix-blend-mode: exclusion;
+      mix-blend-mode: difference;
     }
     
     .contact-row a:hover {
@@ -101,12 +107,11 @@
     
     /* Navigation pills - below title */
     .nav-pills {
-      position: fixed;
+      position: sticky;
       top: calc(2rem + 6rem + 1rem);
-      left: 1rem;
       display: flex;
       gap: 2rem;
-      z-index: 2001;
+      margin-top: 1rem;
     }
     
     .nav-pills a {
@@ -120,7 +125,7 @@
       letter-spacing: 0.05em;
       text-transform: uppercase;
       transition: all 0.3s ease;
-      mix-blend-mode: exclusion;
+      mix-blend-mode: difference;
     }
     
     .nav-pills a:hover {
@@ -141,21 +146,15 @@
     .hero-about {
       display: none;
     }
-    
-    /* Page wrapper needs to be positioned for blend context */
-    .page-wrapper {
-      position: relative;
-      isolation: isolate;
-    }
 
     @media (max-width: 768px) {
       .hero-title {
         font-size: clamp(2rem, 10vw, 3rem);
+        top: 1rem;
       }
       
       .contact-row {
         top: 1rem;
-        right: 1rem;
         gap: 1rem;
       }
       
@@ -165,7 +164,6 @@
       
       .nav-pills {
         top: calc(1rem + 3rem + 1rem);
-        left: 1rem;
         flex-direction: column;
         gap: 0.8rem;
       }
