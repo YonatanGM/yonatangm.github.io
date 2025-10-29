@@ -37,7 +37,7 @@
     }
 
     /************************************************************
-     * BLEND MODE TEXT HEADER - 4 corners → center convergence
+     * BLEND MODE TEXT HEADER - Simple centered statement
      ************************************************************/
     
     body {
@@ -50,25 +50,22 @@
       z-index: 1;
     }
     
-    /* Hero container - manages all fixed elements */
+    /* Hero container - centered, simple */
     .hero-container {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       z-index: 10;
       pointer-events: none;
       mix-blend-mode: difference;
+      text-align: center;
+      width: 100%;
+      padding: 0 2rem;
     }
     
-    /* Individual elements positioned at corners, converge to center */
-    .hero-title,
-    .hero-about,
-    .contact-row,
-    .nav-pills {
-      position: fixed;
-      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    .hero-content {
+      position: relative;
     }
     
     /* Make interactive elements clickable */
@@ -77,24 +74,15 @@
       pointer-events: auto;
     }
 
-    /* NAME - Top-left corner → Center top */
+    /* Just the name - HUGE, bold, centered */
     .hero-title {
-      top: 3rem;
-      left: 3rem;
-      font-size: 2.5rem;
+      font-size: clamp(3rem, 10vw, 8rem);
       font-weight: 900;
       color: #ffffff;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.04em;
       margin: 0;
-      line-height: 1;
+      line-height: 0.9;
       white-space: nowrap;
-    }
-    
-    .hero-container.centered .hero-title {
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -180px);
-      font-size: 4rem;
     }
 
     .hero-title .letter {
@@ -111,75 +99,54 @@
       }
     }
     
-    /* CONTACT - Top-right corner → Center top */
-    .contact-row {
-      top: 3rem;
-      right: 3rem;
-      display: flex;
-      gap: 1.5rem;
+    /* Everything else hidden initially, fades in on scroll */
+    .hero-about,
+    .contact-row,
+    .nav-pills {
+      opacity: 0;
+      transition: opacity 0.6s ease;
     }
     
-    .hero-container.centered .contact-row {
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -80px);
-      right: auto;
-      gap: 2.5rem;
+    .hero-container.show-info .hero-about,
+    .hero-container.show-info .contact-row,
+    .hero-container.show-info .nav-pills {
+      opacity: 1;
+    }
+    
+    /* Bio - small, centered below name */
+    .hero-about {
+      line-height: 1.6;
+      font-size: 0.9rem;
+      color: #ffffff;
+      margin: 2rem auto 1.5rem auto;
+      font-weight: 400;
+      max-width: 600px;
+    }
+
+    /* Contact icons - centered */
+    .contact-row {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
     }
 
     .contact-row a {
       color: #ffffff;
-      font-size: 24px;
+      font-size: 26px;
       text-decoration: none;
-      transition: all 0.3s ease;
-    }
-    
-    .hero-container.centered .contact-row a {
-      font-size: 32px;
+      transition: transform 0.3s ease;
     }
     
     .contact-row a:hover {
       transform: scale(1.15);
     }
     
-    /* BIO - Bottom-left corner → Center bottom */
-    .hero-about {
-      bottom: 3rem;
-      left: 3rem;
-      line-height: 1.5;
-      font-size: 0.85rem;
-      color: #ffffff;
-      font-weight: 400;
-      max-width: 350px;
-    }
-    
-    .hero-container.centered .hero-about {
-      bottom: 50%;
-      left: 50%;
-      transform: translate(-50%, 80px);
-      font-size: 1rem;
-      max-width: 600px;
-      text-align: center;
-    }
-    
-    /* NAVIGATION - Bottom-right corner → Center bottom */
+    /* Navigation - horizontal centered */
     .nav-pills {
-      bottom: 3rem;
-      right: 3rem;
       display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      align-items: flex-end;
-    }
-    
-    .hero-container.centered .nav-pills {
-      bottom: 50%;
-      left: 50%;
-      transform: translate(-50%, 180px);
-      right: auto;
-      flex-direction: row;
-      gap: 3rem;
-      align-items: center;
+      gap: 2.5rem;
+      justify-content: center;
     }
     
     .nav-pills a {
@@ -191,11 +158,7 @@
       color: #ffffff;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      transition: all 0.3s ease;
-    }
-    
-    .hero-container.centered .nav-pills a {
-      font-size: 1rem;
+      transition: opacity 0.3s ease;
     }
     
     .nav-pills a:hover {
@@ -214,99 +177,62 @@
 
     @media (max-width: 1024px) {
       .hero-title {
-        font-size: 2rem;
-        top: 2rem;
-        left: 2rem;
-      }
-      
-      .hero-container.centered .hero-title {
-        font-size: 3rem;
-      }
-      
-      .contact-row {
-        top: 2rem;
-        right: 2rem;
-        gap: 1.2rem;
-      }
-      
-      .contact-row a {
-        font-size: 20px;
-      }
-      
-      .hero-container.centered .contact-row a {
-        font-size: 28px;
+        font-size: clamp(2.5rem, 8vw, 5rem);
       }
       
       .hero-about {
-        bottom: 2rem;
-        left: 2rem;
-        font-size: 0.75rem;
-        max-width: 280px;
+        font-size: 0.85rem;
+        margin-top: 1.5rem;
       }
       
-      .hero-container.centered .hero-about {
-        font-size: 0.9rem;
-        max-width: 500px;
+      .contact-row {
+        gap: 1.5rem;
+      }
+      
+      .contact-row a {
+        font-size: 22px;
       }
       
       .nav-pills {
-        bottom: 2rem;
-        right: 2rem;
-        gap: 0.6rem;
+        gap: 2rem;
       }
       
       .nav-pills a {
-        font-size: 0.7rem;
-      }
-      
-      .hero-container.centered .nav-pills a {
-        font-size: 0.85rem;
-      }
-      
-      .hero-container.centered .nav-pills {
-        gap: 2rem;
+        font-size: 0.75rem;
       }
     }
     
     @media (max-width: 768px) {
-      /* On mobile, revert to simple centered layout always */
       .hero-container {
         position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
         mix-blend-mode: normal;
         background: rgba(0, 0, 0, 0.95);
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         padding: 2rem 1.5rem;
       }
       
-      .hero-title,
       .hero-about,
       .contact-row,
       .nav-pills {
-        position: relative;
-        top: auto;
-        left: auto;
-        right: auto;
-        bottom: auto;
-        transform: none;
+        opacity: 1 !important;
       }
       
       .hero-title {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-        text-align: center;
+        font-size: clamp(2rem, 10vw, 3rem);
+        margin-bottom: 1.5rem;
       }
       
       .hero-about {
         font-size: 0.85rem;
-        max-width: 100%;
-        text-align: center;
-        margin-bottom: 1.5rem;
+        margin: 0 auto 1.5rem auto;
       }
       
       .contact-row {
-        justify-content: center;
-        margin-bottom: 1.5rem;
         gap: 1.5rem;
+        margin-bottom: 1.5rem;
       }
       
       .contact-row a {
@@ -314,8 +240,6 @@
       }
       
       .nav-pills {
-        flex-direction: row;
-        justify-content: center;
         gap: 1.5rem;
         flex-wrap: wrap;
       }
@@ -546,23 +470,18 @@
   </script>
 
   <script>
-    /*************************************************************
-     * 2) 4 CORNERS → CENTER CONVERGENCE
+    /************************************************************
+     * 2) BLEND MODE HEADER - Show info on scroll
      *************************************************************/
     const heroContainer = document.getElementById('heroContainer');
     
     window.addEventListener('scroll', () => {
-      if (window.scrollY < 100) {
-        heroContainer.classList.add('centered');
+      if (window.scrollY > 200) {
+        heroContainer.classList.add('show-info');
       } else {
-        heroContainer.classList.remove('centered');
+        heroContainer.classList.remove('show-info');
       }
     });
-    
-    // Start centered on page load
-    if (window.scrollY < 100) {
-      heroContainer.classList.add('centered');
-    }
   </script>
 
   <script>
