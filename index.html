@@ -37,160 +37,131 @@
     }
 
     /************************************************************
-     * STICKY HERO (TRANSPARENT BLEND)
+     * BLEND MODE TEXT HEADER - Fixed text with content showing through
      ************************************************************/
     .hero-container {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(40px) saturate(180%);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       z-index: 2000;
-      padding: 1.5rem 1rem;
-      transition: all 0.3s ease;
-      color: #ffffff;
+      padding: 2rem 1rem;
+      pointer-events: none; /* Allow clicks to pass through to content below */
     }
     
-    @media (max-width: 768px) {
-      .hero-container {
-        padding: 1.2rem 1rem;
-      }
-    }
-    
-    .hero-container.shrink {
-      padding: 1rem 1rem;
-      background: rgba(0, 0, 0, 0.95);
+    /* Make interactive elements clickable */
+    .hero-container a,
+    .hero-container button {
+      pointer-events: auto;
     }
 
-    /* Clean, bold typography */
+    /* Large fixed title with blend mode */
     .hero-title {
-      display: inline-block;
-      font-size: clamp(1.5rem, 3.5vw, 2rem);
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 700;
       color: #ffffff;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
+      margin: 0;
+      mix-blend-mode: difference; /* Creates the "see-through" effect */
+      line-height: 1;
     }
 
-    .hero-title.mask {
-      opacity: 0.4;
-    }
     .hero-title .letter {
       display: inline-block;
       transform: scale(0.7);
       animation: popIn 0.5s ease forwards;
-    }
-    
-    .hero-container.shrink .hero-about {
-      display: none;
-    }
-
-    @media (max-width: 768px) {
-      .hero-container.shrink {
-        padding: 1rem 1rem;
-      }
-
-      .hero-title {
-        font-size: 1.5rem;
-      }
-
-      .hero-container {
-        transition: none !important;
-      }
-
-      .hero-about {
-        display: block !important;
-        opacity: 1;
-        font-size: 0.9rem;
-      }
-
-      .hero-container.shrink .hero-about {
-        display: none !important;
-      }
-
-      .hero-container.shrink .contact-row {
-        display: none !important;
-      }
     }
 
     @keyframes popIn {
       to { transform: scale(1); }
     }
 
-    .hero-about {
-      line-height: 1.6;
-      font-size: 0.95rem;
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 1.2rem;
-      max-width: 600px;
-      font-weight: 400;
-    }
+    /* Contact icons - always visible in top right */
     .contact-row {
+      position: fixed;
+      top: 2rem;
+      right: 1rem;
       display: flex;
-      gap: 1.8rem;
-      justify-content: left;
-      margin-bottom: 1.2rem;
-      transition: all 0.3s ease;
+      gap: 1.5rem;
+      z-index: 2001;
     }
 
     .contact-row a {
-      color: rgba(255, 255, 255, 0.7);
+      color: #ffffff;
       font-size: 28px;
       text-decoration: none;
       transition: all 0.3s ease;
+      mix-blend-mode: difference;
     }
+    
     .contact-row a:hover {
-      color: #ffffff;
       transform: translateY(-3px) scale(1.1);
     }
     
-    /* Keep contact icons in collapsed header, move to right */
-    .hero-container.shrink .contact-row {
-      position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      margin: 0;
-      gap: 1.5rem;
+    /* Navigation pills - below title */
+    .nav-pills {
+      position: fixed;
+      top: calc(2rem + 6rem + 1rem); /* Below the large title */
+      left: 1rem;
+      display: flex;
+      gap: 2rem;
+      z-index: 2001;
     }
     
-    .hero-container.shrink .contact-row a {
-      font-size: 28px;
-    }
-    /* Minimal navigation */
-    .nav-pills {
-      display: flex;
-      gap: 2.5rem;
-    }
     .nav-pills a {
       position: relative;
       display: inline-block;
-      padding: 0;
+      padding: 0.5rem 0;
       text-decoration: none;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 500;
-      color: rgba(255, 255, 255, 0.6);
+      color: #ffffff;
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      transition: color 0.3s ease;
+      transition: all 0.3s ease;
+      mix-blend-mode: difference;
     }
+    
     .nav-pills a:hover {
-      color: #ffffff;
+      opacity: 0.7;
     }
-    .nav-pills a.active {
-      color: #ffffff;
-    }
+    
     .nav-pills a.active::after {
       content: '';
       position: absolute;
-      bottom: -4px;
+      bottom: 0;
       left: 0;
       width: 100%;
-      height: 1px;
+      height: 2px;
       background: #ffffff;
-    } background: rgba(255, 255, 255, 0.7); /* Maintain background on hover */
+    }
+
+    /* Hide bio text - keeping it minimal */
+    .hero-about {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: clamp(2rem, 10vw, 3rem);
+      }
+      
+      .contact-row {
+        top: 1rem;
+        right: 1rem;
+        gap: 1rem;
+      }
+      
+      .contact-row a {
+        font-size: 24px;
+      }
+      
+      .nav-pills {
+        top: calc(1rem + 3rem + 1rem);
+        left: 1rem;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
     }
 
     /************************************************************
@@ -403,43 +374,20 @@
         span.classList.add('letter');
         span.style.animationName = 'popIn';
         span.style.animationDelay = delay + 's';
-        span.innerText = char === " " ? "\u00A0" : char; // Use non-breaking space for spaces
+        span.innerText = char === " " ? "\u00A0" : char;
         heroTitleEl.appendChild(span);
         delay += 0.05;
       }
     }
 
     setHeroTitle(heroText);
-
-    let heroContainer = document.getElementById('heroContainer');
-    let heroWasShrunk = false;
-    const observer = new MutationObserver(mutationList => {
-      mutationList.forEach(mutation => {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-          const hasShrink = heroContainer.classList.contains('shrink');
-          if (heroWasShrunk && !hasShrink) {
-            setHeroTitle(heroText);
-          }
-          heroWasShrunk = hasShrink;
-        }
-      });
-    });
-    observer.observe(heroContainer, { attributes: true });
   </script>
 
   <script>
     /*************************************************************
-     * 2) HERO SHRINK ON SCROLL AND APPLY MASK EFFECT
+     * 2) BLEND MODE TEXT - No scroll behavior needed, text stays fixed
      *************************************************************/
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 150) {
-        heroContainer.classList.add('shrink');
-        heroTitleEl.classList.add('mask'); // Add mask class to apply mask effect
-      } else {
-        heroContainer.classList.remove('shrink');
-        heroTitleEl.classList.remove('mask'); // Remove mask class to revert to solid text
-      }
-    });
+    // Text remains fixed with blend mode, no shrinking behavior
   </script>
 
   <script>
