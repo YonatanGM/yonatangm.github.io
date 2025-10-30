@@ -99,8 +99,7 @@
 
     .hero-title .letter {
       display: inline-block;
-      opacity: 0;
-      animation: explodeLetter 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      opacity: 1;
       position: relative;
     }
     
@@ -142,11 +141,7 @@
       }
     }
     
-    /* Subtle floating animation after letters settle */
-    .hero-title .letter {
-      animation: explodeLetter 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
-                 floatLetter 3s ease-in-out 2s infinite;
-    }
+    /* Removed floating animation for cleaner look */
     
     @keyframes floatLetter {
       0%, 100% {
@@ -161,14 +156,6 @@
       75% {
         transform: translateY(3px) rotate(-1deg);
       }
-    }
-    
-    /* Different float timing for each letter */
-    .hero-title .letter:nth-child(odd) {
-      animation-delay: 0s, 2.2s;
-    }
-    .hero-title .letter:nth-child(even) {
-      animation-delay: 0s, 2.5s;
     }
     
     /* CONTACT - Top-right corner → Center top */
@@ -386,63 +373,114 @@
     }
 
     /************************************************************
-     * SECTION CARDS - SCROLL-SHUFFLE VIEWPORT
+     * SECTION CARDS - STACKED VIDEO SECTIONS WITH POPUP RAIL
      ************************************************************/
     .section-card {
       position: relative;
-      min-height: 500vh; /* Long scroll for shuffling effect */
       background-color: #000000;
       border: none;
+      margin: 0;
+      padding: 0;
     }
-    
-    /* Fixed viewport for jumbled video cards */
-    .video-viewport {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      z-index: 1;
-      pointer-events: none;
+
+    .section-card:first-of-type {
+      margin-top: 0;
     }
-    
-    /* Video card - jumbled, overlapping */
-    .video-card {
-      position: absolute;
-      width: clamp(250px, 30vw, 400px);
-      height: auto;
-      border-radius: 4px;
-      overflow: hidden;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-      pointer-events: auto;
-      cursor: pointer;
-      opacity: 0;
+
+    .video-stack {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
     }
-    
-    .video-card.visible {
-      opacity: 1;
-    }
-    
-    .video-card video {
-      width: 100%;
-      height: auto;
+
+    .video-section {
+      position: relative;
       display: block;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      line-height: 0;
     }
-    
-    .video-card:hover {
-      z-index: 100 !important;
-      transform: scale(1.08) !important;
-      box-shadow: 0 20px 60px rgba(255, 255, 255, 0.3);
+
+    .video-section + .video-section {
+      border-top: none;
     }
-    
-    /* Popup shapes for scroll-locked reveals */
-    .popup-shape {
-      position: fixed;
-      border-radius: 8px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+
+    .video-frame {
+      position: relative;
+      width: 100%;
+      display: block;
+      line-height: 0;
+    }
+
+    .video-frame video {
+      max-width: 100vw;
+      width: auto;
+      height: auto;
+      max-height: 100vh;
+      display: block;
+      object-fit: contain;
+      box-shadow: none;
+    }
+
+    .popup-rail {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100vw;
+      height: 100%;
+      min-height: 100vh;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 10vw;
       pointer-events: none;
+    }
+
+    .popup-rail::before {
+      content: '';
+      position: absolute;
+      inset: 12% 8%;
+      border: 1px dashed rgba(255, 255, 255, 0.08);
+      border-radius: 0;
+      pointer-events: none;
+    }
+
+    .popup-item {
+      position: absolute;
+      border-radius: 0;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
+      transform: translate(-50%, -50%) scale(0);
+      transform-origin: center;
+      opacity: 0;
       will-change: transform, opacity;
+    }
+
+    @media (max-width: 1024px) {
+      .video-section {
+        flex-direction: column;
+        padding: 0 4vw 6vh;
+        min-height: auto;
+      }
+
+      .video-frame {
+        flex: none;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .popup-rail {
+        width: 100%;
+        min-height: 320px;
+        height: auto;
+        padding: 3rem 0;
+      }
+
+      .popup-rail::before {
+        inset: 18% 20%;
+      }
     }
 
     /* Overlay Styling */
@@ -495,7 +533,7 @@
       background-color: #c0c0c0; /* Darker gray on hover */
     }
   </style>
-</head>pa
+</head>
 <body>
   <!-- PAGE WRAPPER for white side margins -->
   <div class="page-wrapper">
@@ -534,24 +572,12 @@
 
     <!-- 3D CARD (Soft Neutral) -->
     <div class="section-card card-3d" id="card3D">
-      <!-- Removed section-title as per user request -->
-      <div class="multi-column" id="multiCol3D">
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col"></div>
-      </div>
+      <div class="video-stack" id="threeDStack"></div>
     </div>
 
     <!-- TOUCH CARD (Soft Neutral) -->
     <div class="section-card card-touch" id="cardTouch">
-      <!-- Removed section-title as per user request -->
-      <div class="multi-column" id="multiColTouch">
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col"></div>
-      </div>
+      <div class="video-stack" id="touchStack"></div>
     </div>
   </div> <!-- end page-wrapper -->
 
@@ -563,10 +589,12 @@
     </div>
   </div>
 
-  <script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+  <script>
     /*************************************************************
-     * 1) ANIMATE HERO TITLE with “pop in” letters
+     * 1) ANIMATE HERO TITLE with "pop in" letters
      *************************************************************/
     const heroTitleEl = document.getElementById('heroTitle');
     const heroText = "HELLO, I'M YONATAN";
@@ -578,7 +606,6 @@
         const char = text[i];
         const span = document.createElement('span');
         span.classList.add('letter');
-        span.style.animationName = 'popIn';
         span.style.animationDelay = delay + 's';
         span.innerText = char === " " ? "\u00A0" : char;
         heroTitleEl.appendChild(span);
@@ -611,285 +638,219 @@
 
   <script>
     /*************************************************************
-     * 3) CREATE & LAZY-LOAD videos for 3D & Touch
+     * 3) BUILD VIDEO SECTIONS + POPUP METADATA WITH GSAP
      *************************************************************/
-    const threeDCount = 18;
-    const touchCount = 18;
-    const multiCol3D = document.getElementById('multiCol3D').children;
-    const multiColTouch = document.getElementById('multiColTouch').children;
+    const threeDStack = document.getElementById('threeDStack');
+    const touchStack = document.getElementById('touchStack');
+
+    const gradients = [
+      'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+      'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+      'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+    ];
+
+    const popupConfig = {
+      threeD: {
+        1: [
+          { size: 190, background: gradients[3], top: 38, left: 82, scale: 1.15 }
+        ],
+        4: [
+          { size: 240, background: gradients[1], top: 32, left: 80, scale: 1.1 },
+          { size: 200, background: gradients[0], top: 60, left: 90, scale: 0.9 }
+        ],
+        7: [
+          { size: 220, background: gradients[2], top: 40, left: 84, scale: 1.05 },
+          { size: 180, background: gradients[3], top: 24, left: 92, scale: 0.9 }
+        ]
+      },
+      touch: {
+        3: [
+          { size: 220, background: gradients[0], top: 34, left: 82, scale: 1.05 }
+        ]
+      }
+    };
 
     // Hardcoded arrays with video file names (just the base names)
     const threeDVideos = [
-      "video12.mp4", "video9.mp4",  "video13.mp4", "mov32.mp4", "video11.mp4", "mov30.mp4", "mov33.mp4", "mov22.mp4",
-      "video0.mp4", /* "video1.mp4" */, "mov24.mp4",
-      "video3.mp4", "video4.mp4", "video5.mp4",
-      "video6.mp4", "video8.mp4", "video10.mp4",
-      /*"video7.mp4"*/, "video14.mp4",
-      "video15.mp4", "video16.mp4", "video17.mp4",
+      'video12.mp4', 'video9.mp4',  'video13.mp4', 'mov32.mp4', 'video11.mp4', 'mov30.mp4', 'mov33.mp4', 'mov22.mp4',
+      'video0.mp4', 'mov24.mp4',
+      'video3.mp4', 'video4.mp4', 'video5.mp4',
+      'video6.mp4', 'video8.mp4', 'video10.mp4',
+      'video14.mp4',
+      'video15.mp4', 'video16.mp4', 'video17.mp4'
     ].reverse();
 
     const touchVideos = [
-      "Movie99.mp4",
-      "Movie10.mp4",
-      "Movie11.mp4",
-      "Movie18.mp4",
-      "Movie21.mp4",
-      "Movie27.mp4",
-      "Movie31.mp4",
-      // "Movie40.mp4",
-      "Movie41.mp4",
-      "Movie56.mp4",
-      "Movie62.mp4",
-      "Movie9.mp4",
-      "Movie42.mp4"
+      'Movie99.mp4',
+      'Movie10.mp4',
+      'Movie11.mp4',
+      'Movie18.mp4',
+      'Movie21.mp4',
+      'Movie27.mp4',
+      'Movie31.mp4',
+      'Movie41.mp4',
+      'Movie56.mp4',
+      'Movie62.mp4',
+      'Movie9.mp4',
+      'Movie42.mp4'
     ];
 
-    // Fill 3D videos with random scatter positions
-    threeDVideos.forEach((video, index) => {
-      const vid = document.createElement('video');
-      vid.className = 'rect-video';
-      vid.dataset.src = `assets/${video}`;
-      vid.preload = 'auto';
-      vid.muted = true;
-      vid.playsInline = true;
-      vid.loading = 'lazy';
-      
-      // Random scatter position
-      const scatterX = (Math.random() - 0.5) * 800; // -400 to 400
-      const scatterY = (Math.random() - 0.5) * 600; // -300 to 300
-      const scatterRotate = (Math.random() - 0.5) * 180; // -90 to 90
-      
-      vid.style.setProperty('--scatter-x', `${scatterX}px`);
-      vid.style.setProperty('--scatter-y', `${scatterY}px`);
-      vid.style.setProperty('--scatter-rotate', `${scatterRotate}deg`);
-      
-      multiCol3D[index % 4].appendChild(vid);
-    });
+    const sectionsWithPopups = [];
 
-    // Fill Touch videos with random scatter positions
-    touchVideos.forEach((video, index) => {
-      const vid = document.createElement('video');
-      vid.className = 'rect-video';
-      vid.dataset.src = `assets/${video}`;
-      vid.preload = 'auto';
-      vid.muted = true;
-      vid.playsInline = true;
-      vid.loading = 'lazy';
-      
-      // Random scatter position
-      const scatterX = (Math.random() - 0.5) * 800;
-      const scatterY = (Math.random() - 0.5) * 600;
-      const scatterRotate = (Math.random() - 0.5) * 180;
-      
-      vid.style.setProperty('--scatter-x', `${scatterX}px`);
-      vid.style.setProperty('--scatter-y', `${scatterY}px`);
-      vid.style.setProperty('--scatter-rotate', `${scatterRotate}deg`);
-      
-      multiColTouch[index % 4].appendChild(vid);
-    });
-
-    const allVids = document.querySelectorAll('.rect-video');
-    
-    // Define which videos have popups and how many
-    const videoPopups = {
-      2: 2,  // Third video has 2 popups
-      5: 3,  // Sixth video has 3 popups  
-      8: 2   // Ninth video has 2 popups
-    };
-    
-    // Add popup metadata to videos
-    allVids.forEach((vid, index) => {
-      vid.dataset.popupCount = videoPopups[index] || 0;
-      vid.dataset.currentPopup = 0;
-    });
-  </script>
-
-  <script>
-    /*************************************************************
-     * 4) SCROLL-LOCKED POPUP REVEAL
-     *************************************************************/
-    let scrollLocked = false;
-    let lockedVideo = null;
-    let popupElements = [];
-    let accumulatedScroll = 0;
-    const scrollPerPopup = 300; // Scroll amount needed to fully scale one popup
-    
-    function createPopupShapes(video, count) {
-      const videoRect = video.getBoundingClientRect();
-      const popups = [];
-      
-      for (let i = 0; i < count; i++) {
-        const popup = document.createElement('div');
-        popup.className = 'popup-shape';
-        
-        // Random position in right 35% space, within video height
-        const rightStart = 65; // Start at 65% from left (video ends around 65%)
-        const x = rightStart + Math.random() * 30; // 65-95%
-        const y = videoRect.top + Math.random() * (videoRect.height - 200);
-        
-        popup.style.left = `${x}%`;
-        popup.style.top = `${y}px`;
-        popup.style.width = '200px';
-        popup.style.height = '200px';
-        
-        // Cycle through colors
-        const colors = [
-          'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-          'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-          'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-          'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
-        ];
-        popup.style.background = colors[i % colors.length];
-        
-        // Start completely invisible and scaled to 0
-        popup.style.transform = 'scale(0)';
-        popup.style.opacity = '0';
-        popup.style.transition = 'none'; // No transition initially
-        
-        document.body.appendChild(popup);
-        popups.push(popup);
-      }
-      
-      return popups;
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
     }
-    
-    function updatePopupScales(scrollDelta) {
-      if (!scrollLocked || popupElements.length === 0) return;
-      
-      // Track virtual scroll - only count downward scrolling
-      if (scrollDelta > 0) {
-        accumulatedScroll += Math.abs(scrollDelta);
-      }
-      
-      const maxScroll = scrollPerPopup * popupElements.length;
-      
-      popupElements.forEach((popup, index) => {
-        const popupStart = index * scrollPerPopup;
-        const popupEnd = (index + 1) * scrollPerPopup;
-        
-        if (accumulatedScroll >= popupStart) {
-          const progress = Math.min(1, (accumulatedScroll - popupStart) / scrollPerPopup);
-          popup.style.transform = `scale(${progress})`;
-          popup.style.opacity = progress;
-          popup.style.zIndex = 5 + index; // Stack on top
-        } else {
-          popup.style.transform = 'scale(0)';
-          popup.style.opacity = '0';
-        }
+
+    function createPopupElement(spec, index) {
+      const element = document.createElement('div');
+      element.className = 'popup-item';
+      element.style.width = `${spec.size}px`;
+      element.style.height = `${spec.size}px`;
+      element.style.background = spec.background || gradients[index % gradients.length];
+
+      const jitter = ((index * 11) % 6) - 3;
+      const top = clamp(spec.top + jitter, 18, 82);
+      const left = clamp(spec.left + jitter * 0.6, 68, 92);
+
+      element.style.top = `${top}%`;
+      element.style.left = `${left}%`;
+
+      element.dataset.targetScale = spec.scale ?? 1;
+
+      return element;
+    }
+
+    function createVideoSection(stack, src, index, category) {
+      const section = document.createElement('section');
+      section.className = 'video-section';
+      section.dataset.category = category;
+      section.dataset.index = index;
+
+      const frame = document.createElement('div');
+      frame.className = 'video-frame';
+
+      const video = document.createElement('video');
+      video.className = 'rect-video';
+      const sourcePath = `assets/${src}`;
+      video.src = sourcePath;
+      video.preload = 'auto';
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.load();
+      frame.appendChild(video);
+
+      const rail = document.createElement('div');
+      rail.className = 'popup-rail';
+
+      const popupSpecs = (popupConfig[category] && popupConfig[category][index]) || [];
+      const popupElements = popupSpecs.map((spec, popupIndex) => {
+        const popup = createPopupElement(spec, popupIndex);
+        rail.appendChild(popup);
+        return popup;
       });
-      
-      // Check if all popups fully revealed and a bit more scrolling happened
-      if (accumulatedScroll >= maxScroll + 100) {
-        unlockScroll();
+
+      section.appendChild(frame);
+      section.appendChild(rail);
+      stack.appendChild(section);
+
+      if (popupElements.length) {
+        sectionsWithPopups.push({ section, popupElements });
       }
+
+      return video;
     }
-    
-    function unlockScroll() {
-      console.log('Unlocking scroll - accumulated:', accumulatedScroll);
-      scrollLocked = false;
-      lockCheckCooldown = true;
-      accumulatedScroll = 0;
-      
-      // Fade out and remove popups
-      popupElements.forEach(popup => {
-        popup.style.transition = 'all 0.3s ease-out';
-        popup.style.transform = 'scale(0)';
-        popup.style.opacity = '0';
-        setTimeout(() => popup.remove(), 300);
-      });
-      popupElements = [];
-      
-      // Reset locked video after a delay to prevent immediate re-lock
-      setTimeout(() => {
-        lockedVideo = null;
-        lockCheckCooldown = false;
-        console.log('Lock cooldown ended');
-      }, 1000);
-    }
-    
-    let lastScrollY = window.scrollY;
-    let lockCheckCooldown = false;
-    let lockedScrollPosition = 0;
-    
-    window.addEventListener('scroll', (e) => {
-      const currentScrollY = window.scrollY;
-      const scrollDelta = currentScrollY - lastScrollY;
-      
-      if (scrollLocked) {
-        // Prevent actual scroll movement, hijack it for popup scaling
-        window.scrollTo(0, lockedScrollPosition);
-        updatePopupScales(scrollDelta);
-        e.preventDefault();
-        lastScrollY = lockedScrollPosition; // Keep lastScrollY at locked position
-        return;
-      }
-      
-      // Only check for lock if scrolling down and not in cooldown
-      if (scrollDelta > 0 && !lockCheckCooldown) {
-        allVids.forEach(vid => {
-          const popupCount = parseInt(vid.dataset.popupCount);
-          if (popupCount === 0) return;
-          
-          const rect = vid.getBoundingClientRect();
-          const viewportCenter = window.innerHeight / 2;
-          
-          // Check if video is centered and we haven't locked to this video yet
-          if (rect.top < viewportCenter && rect.bottom > viewportCenter && lockedVideo !== vid) {
-            // Lock scroll and create popups
-            console.log('Locking scroll at video index', Array.from(allVids).indexOf(vid), 'with', popupCount, 'popups');
-            scrollLocked = true;
-            lockedVideo = vid;
-            lockedScrollPosition = currentScrollY; // Save where we locked
-            accumulatedScroll = 0;
-            popupElements = createPopupShapes(vid, popupCount);
+
+    const createdThreeDVideos = threeDVideos.map((videoName, index) =>
+      createVideoSection(threeDStack, videoName, index, 'threeD')
+    );
+
+    const createdTouchVideos = touchVideos.map((videoName, index) =>
+      createVideoSection(touchStack, videoName, index, 'touch')
+    );
+
+    const allVids = [...createdThreeDVideos, ...createdTouchVideos];
+
+    // Initialize GSAP ScrollTrigger for scroll-jacked popups
+    if (window.gsap && window.ScrollTrigger) {
+      gsap.registerPlugin(ScrollTrigger);
+
+      sectionsWithPopups.forEach(({ section, popupElements }) => {
+        // Set initial state
+        popupElements.forEach(popup => {
+          gsap.set(popup, {
+            scale: 0,
+            autoAlpha: 0
+          });
+        });
+
+        const timeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: 'top top',
+            end: `+=${Math.max(1, popupElements.length) * 500}`,
+            scrub: 1,
+            pin: true,
+            pinSpacing: true,
+            anticipatePin: 0.5,
+            invalidateOnRefresh: true
           }
         });
-      }
-      
-      lastScrollY = currentScrollY;
-    }, { passive: false });
-  </script>
 
-  <script>
-    /*************************************************************
-     * 5) LAZY LOADING + SCATTER-TO-GRID ANIMATION
-     *************************************************************/
-    const lazyObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const vid = entry.target;
-          
-          // Load video
-          if (vid.dataset.src) {
-            vid.src = vid.dataset.src;
-            vid.load();
-          }
-          
-          // Trigger organization animation with stagger
-          setTimeout(() => {
-            vid.classList.add('organized');
-          }, Math.random() * 600); // Random stagger 0-600ms
-          
-          lazyObserver.unobserve(vid);
-        }
+        popupElements.forEach((popup, idx) => {
+          const targetScale = parseFloat(popup.dataset.targetScale || '1');
+          const position = idx * 1.2;
+
+          // Scale in
+          timeline.fromTo(popup,
+            {
+              scale: 0,
+              autoAlpha: 0
+            },
+            {
+              scale: targetScale,
+              autoAlpha: 1,
+              duration: 1.5,
+              ease: 'power2.out'
+            },
+            position
+          );
+
+          // Subtle pulse
+          timeline.to(popup, {
+            scale: targetScale * 1.08,
+            duration: 0.8,
+            ease: 'sine.inOut',
+            yoyo: true,
+            repeat: 1
+          }, position + 0.6);
+        });
+
+        // Scale out all
+        timeline.to(popupElements, {
+          scale: 0,
+          autoAlpha: 0,
+          duration: 0.8,
+          ease: 'power2.in',
+          stagger: { each: 0.12, from: 'end' }
+        }, '+=0.8');
       });
-    }, {
-      threshold: 0.1,
-      rootMargin: '100px'
-    });
-    
-    allVids.forEach(vid => lazyObserver.observe(vid));
+
+      ScrollTrigger.refresh();
+    }
   </script>
 
   <script>
     /*************************************************************
-     * 6) HOVER-TO-PLAY => Desktop
+     * 4) HOVER-TO-PLAY => Desktop
      *************************************************************/
     allVids.forEach(video => {
       video.addEventListener('mouseover', e => {
-        e.currentTarget.muted = true;
-        try { e.currentTarget.play(); }
+        const vid = e.currentTarget;
+        vid.muted = true;
+        try { vid.play(); }
         catch(err) { if (err.name !== "AbortError") console.log(err); }
       });
       video.addEventListener('mouseleave', e => {
@@ -901,7 +862,7 @@
 
   <script>
     /*************************************************************
-     * 7) DESKTOP OVERLAY => click
+     * 5) DESKTOP OVERLAY => click
      *************************************************************/
     const desktopOverlay = document.getElementById('desktopOverlay');
     const overlayVideo = document.getElementById('overlayVideo');
@@ -911,6 +872,7 @@
       if (window.innerWidth >= 1024) {
         desktopOverlay.classList.add('active');
         overlayVideo.src = e.currentTarget.src;
+        overlayVideo.load();
         overlayVideo.play();
       }
     }
@@ -927,7 +889,7 @@
 
   <script>
     /*************************************************************
-     * 8) MOBILE PRESS-AND-HOLD => play
+     * 6) MOBILE PRESS-AND-HOLD => play
      *************************************************************/
     let mediaQuery = window.matchMedia('(max-width: 600px)');
     function handleMobileHold(mq) {
