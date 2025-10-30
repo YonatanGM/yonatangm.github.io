@@ -435,15 +435,6 @@
       transform: scale(1.08) !important;
       box-shadow: 0 20px 60px rgba(255, 255, 255, 0.3);
     }
-    
-    /* Popup shapes for scroll-locked reveals */
-    .popup-shape {
-      position: fixed;
-      border-radius: 8px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-      pointer-events: none;
-      will-change: transform, opacity;
-    }
 
     /* Overlay Styling */
     .overlay {
@@ -689,171 +680,11 @@
     });
 
     const allVids = document.querySelectorAll('.rect-video');
-    
-    // Define which videos have popups and how many
-    const videoPopups = {
-      2: 2,  // Third video has 2 popups
-      5: 3,  // Sixth video has 3 popups  
-      8: 2   // Ninth video has 2 popups
-    };
-    
-    // Add popup metadata to videos
-    allVids.forEach((vid, index) => {
-      vid.dataset.popupCount = videoPopups[index] || 0;
-      vid.dataset.currentPopup = 0;
-    });
   </script>
 
   <script>
     /*************************************************************
-     * 4) SCROLL-LOCKED POPUP REVEAL
-     *************************************************************/
-    let scrollLocked = false;
-    let lockedVideo = null;
-    let popupElements = [];
-    let accumulatedScroll = 0;
-    const scrollPerPopup = 300; // Scroll amount needed to fully scale one popup
-    
-    function createPopupShapes(video, count) {
-      const videoRect = video.getBoundingClientRect();
-      const popups = [];
-      
-      for (let i = 0; i < count; i++) {
-        const popup = document.createElement('div');
-        popup.className = 'popup-shape';
-        
-        // Random position in right 35% space, within video height
-        const rightStart = 65; // Start at 65% from left (video ends around 65%)
-        const x = rightStart + Math.random() * 30; // 65-95%
-        const y = videoRect.top + Math.random() * (videoRect.height - 200);
-        
-        popup.style.left = `${x}%`;
-        popup.style.top = `${y}px`;
-        popup.style.width = '200px';
-        popup.style.height = '200px';
-        
-        // Cycle through colors
-        const colors = [
-          'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-          'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-          'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-          'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
-        ];
-        popup.style.background = colors[i % colors.length];
-        
-        // Start completely invisible and scaled to 0
-        popup.style.transform = 'scale(0)';
-        popup.style.opacity = '0';
-        popup.style.transition = 'none'; // No transition initially
-        
-        document.body.appendChild(popup);
-        popups.push(popup);
-      }
-      
-      return popups;
-    }
-    
-    function updatePopupScales(scrollDelta) {
-      if (!scrollLocked || popupElements.length === 0) return;
-      
-      // Track virtual scroll - only count downward scrolling
-      if (scrollDelta > 0) {
-        accumulatedScroll += Math.abs(scrollDelta);
-      }
-      
-      const maxScroll = scrollPerPopup * popupElements.length;
-      
-      popupElements.forEach((popup, index) => {
-        const popupStart = index * scrollPerPopup;
-        const popupEnd = (index + 1) * scrollPerPopup;
-        
-        if (accumulatedScroll >= popupStart) {
-          const progress = Math.min(1, (accumulatedScroll - popupStart) / scrollPerPopup);
-          popup.style.transform = `scale(${progress})`;
-          popup.style.opacity = progress;
-          popup.style.zIndex = 5 + index; // Stack on top
-        } else {
-          popup.style.transform = 'scale(0)';
-          popup.style.opacity = '0';
-        }
-      });
-      
-      // Check if all popups fully revealed and a bit more scrolling happened
-      if (accumulatedScroll >= maxScroll + 100) {
-        unlockScroll();
-      }
-    }
-    
-    function unlockScroll() {
-      console.log('Unlocking scroll - accumulated:', accumulatedScroll);
-      scrollLocked = false;
-      lockCheckCooldown = true;
-      accumulatedScroll = 0;
-      
-      // Fade out and remove popups
-      popupElements.forEach(popup => {
-        popup.style.transition = 'all 0.3s ease-out';
-        popup.style.transform = 'scale(0)';
-        popup.style.opacity = '0';
-        setTimeout(() => popup.remove(), 300);
-      });
-      popupElements = [];
-      
-      // Reset locked video after a delay to prevent immediate re-lock
-      setTimeout(() => {
-        lockedVideo = null;
-        lockCheckCooldown = false;
-        console.log('Lock cooldown ended');
-      }, 1000);
-    }
-    
-    let lastScrollY = window.scrollY;
-    let lockCheckCooldown = false;
-    let lockedScrollPosition = 0;
-    
-    window.addEventListener('scroll', (e) => {
-      const currentScrollY = window.scrollY;
-      const scrollDelta = currentScrollY - lastScrollY;
-      
-      if (scrollLocked) {
-        // Prevent actual scroll movement, hijack it for popup scaling
-        window.scrollTo(0, lockedScrollPosition);
-        updatePopupScales(scrollDelta);
-        e.preventDefault();
-        lastScrollY = lockedScrollPosition; // Keep lastScrollY at locked position
-        return;
-      }
-      
-      // Only check for lock if scrolling down and not in cooldown
-      if (scrollDelta > 0 && !lockCheckCooldown) {
-        allVids.forEach(vid => {
-          const popupCount = parseInt(vid.dataset.popupCount);
-          if (popupCount === 0) return;
-          
-          const rect = vid.getBoundingClientRect();
-          const viewportCenter = window.innerHeight / 2;
-          
-          // Check if video is centered and we haven't locked to this video yet
-          if (rect.top < viewportCenter && rect.bottom > viewportCenter && lockedVideo !== vid) {
-            // Lock scroll and create popups
-            console.log('Locking scroll at video index', Array.from(allVids).indexOf(vid), 'with', popupCount, 'popups');
-            scrollLocked = true;
-            lockedVideo = vid;
-            lockedScrollPosition = currentScrollY; // Save where we locked
-            accumulatedScroll = 0;
-            popupElements = createPopupShapes(vid, popupCount);
-          }
-        });
-      }
-      
-      lastScrollY = currentScrollY;
-    }, { passive: false });
-  </script>
-
-  <script>
-    /*************************************************************
-     * 5) LAZY LOADING + SCATTER-TO-GRID ANIMATION
+     * 4) LAZY LOADING + SCATTER-TO-GRID ANIMATION
      *************************************************************/
     const lazyObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -884,7 +715,7 @@
 
   <script>
     /*************************************************************
-     * 6) HOVER-TO-PLAY => Desktop
+     * 5) HOVER-TO-PLAY => Desktop
      *************************************************************/
     allVids.forEach(video => {
       video.addEventListener('mouseover', e => {
@@ -901,7 +732,7 @@
 
   <script>
     /*************************************************************
-     * 7) DESKTOP OVERLAY => click
+     * 6) DESKTOP OVERLAY => click
      *************************************************************/
     const desktopOverlay = document.getElementById('desktopOverlay');
     const overlayVideo = document.getElementById('overlayVideo');
@@ -927,7 +758,7 @@
 
   <script>
     /*************************************************************
-     * 8) MOBILE PRESS-AND-HOLD => play
+     * 7) MOBILE PRESS-AND-HOLD => play
      *************************************************************/
     let mediaQuery = window.matchMedia('(max-width: 600px)');
     function handleMobileHold(mq) {
