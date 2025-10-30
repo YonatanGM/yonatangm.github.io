@@ -657,6 +657,9 @@
 
     const popupConfig = {
       threeD: {
+        1: [
+          { size: 190, background: gradients[3], top: 38, left: 82, scale: 1.15 }
+        ],
         4: [
           { size: 240, background: gradients[1], top: 32, left: 80, scale: 1.1 },
           { size: 200, background: gradients[0], top: 60, left: 90, scale: 0.9 }
@@ -794,7 +797,9 @@
             end: `+=${Math.max(1, popupElements.length) * 500}`,
             scrub: 1,
             pin: true,
-            pinSpacing: true
+            pinSpacing: true,
+            anticipatePin: 0.5,
+            invalidateOnRefresh: true
           }
         });
 
