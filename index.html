@@ -96,67 +96,6 @@
       transform: translate(-50%, -180px);
       font-size: 4rem;
     }
-
-    .hero-title .letter {
-      display: inline-block;
-      opacity: 1;
-      position: relative;
-    }
-    
-    /* Each letter explodes from different directions */
-    .hero-title .letter:nth-child(1) { animation-delay: 0s; --explode-x: -200px; --explode-y: -100px; --explode-rotate: -180deg; }
-    .hero-title .letter:nth-child(2) { animation-delay: 0.1s; --explode-x: 150px; --explode-y: -150px; --explode-rotate: 120deg; }
-    .hero-title .letter:nth-child(3) { animation-delay: 0.2s; --explode-x: -180px; --explode-y: 120px; --explode-rotate: -90deg; }
-    .hero-title .letter:nth-child(4) { animation-delay: 0.3s; --explode-x: 200px; --explode-y: -80px; --explode-rotate: 240deg; }
-    .hero-title .letter:nth-child(5) { animation-delay: 0.4s; --explode-x: -120px; --explode-y: 150px; --explode-rotate: -220deg; }
-    .hero-title .letter:nth-child(6) { animation-delay: 0.5s; --explode-x: 180px; --explode-y: 100px; --explode-rotate: 160deg; }
-    .hero-title .letter:nth-child(7) { animation-delay: 0.6s; --explode-x: -150px; --explode-y: -120px; --explode-rotate: -270deg; }
-    .hero-title .letter:nth-child(8) { animation-delay: 0.7s; --explode-x: 100px; --explode-y: 140px; --explode-rotate: 200deg; }
-    .hero-title .letter:nth-child(9) { animation-delay: 0.8s; --explode-x: -100px; --explode-y: -140px; --explode-rotate: -120deg; }
-    .hero-title .letter:nth-child(10) { animation-delay: 0.9s; --explode-x: 140px; --explode-y: -100px; --explode-rotate: 300deg; }
-    .hero-title .letter:nth-child(11) { animation-delay: 1s; --explode-x: -140px; --explode-y: 100px; --explode-rotate: -150deg; }
-    .hero-title .letter:nth-child(12) { animation-delay: 1.1s; --explode-x: 160px; --explode-y: 120px; --explode-rotate: 140deg; }
-    .hero-title .letter:nth-child(13) { animation-delay: 1.2s; --explode-x: -160px; --explode-y: -90px; --explode-rotate: -200deg; }
-    .hero-title .letter:nth-child(14) { animation-delay: 1.3s; --explode-x: 120px; --explode-y: 90px; --explode-rotate: 180deg; }
-    .hero-title .letter:nth-child(15) { animation-delay: 1.4s; --explode-x: -90px; --explode-y: 130px; --explode-rotate: -100deg; }
-    .hero-title .letter:nth-child(16) { animation-delay: 1.5s; --explode-x: 130px; --explode-y: -130px; --explode-rotate: 220deg; }
-    .hero-title .letter:nth-child(17) { animation-delay: 1.6s; --explode-x: -130px; --explode-y: 80px; --explode-rotate: -240deg; }
-    .hero-title .letter:nth-child(18) { animation-delay: 1.7s; --explode-x: 110px; --explode-y: -110px; --explode-rotate: 260deg; }
-
-    @keyframes explodeLetter {
-      0% {
-        transform: translate(var(--explode-x), var(--explode-y)) rotate(var(--explode-rotate)) scale(0.2);
-        opacity: 0;
-      }
-      60% {
-        transform: translate(0, 0) rotate(calc(var(--explode-rotate) * 0.1)) scale(1.15);
-        opacity: 1;
-      }
-      80% {
-        transform: translate(0, 0) rotate(calc(var(--explode-rotate) * -0.05)) scale(0.95);
-      }
-      100% { 
-        transform: translate(0, 0) rotate(0deg) scale(1);
-        opacity: 1;
-      }
-    }
-    
-    /* Removed floating animation for cleaner look */
-    
-    @keyframes floatLetter {
-      0%, 100% {
-        transform: translateY(0) rotate(0deg);
-      }
-      25% {
-        transform: translateY(-3px) rotate(1deg);
-      }
-      50% {
-        transform: translateY(0) rotate(0deg);
-      }
-      75% {
-        transform: translateY(3px) rotate(-1deg);
-      }
-    }
     
     /* CONTACT - Top-right corner → Center top */
     .contact-row {
@@ -373,7 +312,7 @@
     }
 
     /************************************************************
-     * SECTION CARDS - STACKED VIDEO SECTIONS WITH POPUP RAIL
+     * SECTION CARDS - STACKED VIDEO SECTIONS
      ************************************************************/
     .section-card {
       position: relative;
@@ -388,48 +327,20 @@
     }
 
     .video-stack {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: clamp(0.5rem, 1vw, 1.5rem);
-      padding: clamp(1rem, 2vw, 3rem);
+      display: flex;
+      flex-direction: column;
       margin: 0;
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
+      padding: 0;
     }
 
     .video-section {
       position: relative;
-      grid-column: span 6;
       display: block;
       width: 100%;
       margin: 0;
       padding: 0;
       line-height: 0;
     }
-
-    /* Create interesting patterns - hero, single, pair, hero, etc */
-    .video-section:nth-child(1) { grid-column: span 12; }  /* Hero */
-    .video-section:nth-child(2) { grid-column: span 6; }
-    .video-section:nth-child(3) { grid-column: span 6; }
-    .video-section:nth-child(4) { grid-column: span 8; }   /* Large */
-    .video-section:nth-child(5) { grid-column: span 4; }   /* Small */
-    .video-section:nth-child(6) { grid-column: span 12; }  /* Hero */
-    .video-section:nth-child(7) { grid-column: span 5; }
-    .video-section:nth-child(8) { grid-column: span 7; }
-    .video-section:nth-child(9) { grid-column: span 6; }
-    .video-section:nth-child(10) { grid-column: span 6; }
-    .video-section:nth-child(11) { grid-column: span 8; }
-    .video-section:nth-child(12) { grid-column: span 4; }
-    .video-section:nth-child(13) { grid-column: span 12; }
-    .video-section:nth-child(14) { grid-column: span 7; }
-    .video-section:nth-child(15) { grid-column: span 5; }
-
-    /* Continue pattern for more videos */
-    .video-section:nth-child(n+16):nth-child(4n+1) { grid-column: span 12; }
-    .video-section:nth-child(n+16):nth-child(4n+2) { grid-column: span 6; }
-    .video-section:nth-child(n+16):nth-child(4n+3) { grid-column: span 6; }
-    .video-section:nth-child(n+16):nth-child(4n) { grid-column: span 8; }
 
     .video-section + .video-section {
       border-top: none;
@@ -438,60 +349,35 @@
     .video-frame {
       position: relative;
       width: 100%;
+      display: block;
       line-height: 0;
     }
 
     .video-frame video {
-      width: 100%;
+      width: auto;
+      max-width: 1080px;
       height: auto;
       display: block;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .video-frame video:hover {
-      transform: scale(1.02);
+      object-fit: contain;
+      box-shadow: none;
     }
     
     /* Exception for widescreen video */
     .video-frame video[src*="mov24"] {
-      width: 100%;
+      max-width: 100vw;
     }
 
     @media (max-width: 1024px) {
-      .video-stack {
-        grid-template-columns: repeat(6, 1fr);
-        gap: 0.75rem;
+      .video-section {
+        flex-direction: column;
+        padding: 0 4vw 6vh;
+        min-height: auto;
       }
 
-      .video-section,
-      .video-section:nth-child(n) {
-        grid-column: span 6 !important;
-      }
-
-      .video-section:nth-child(2n) {
-        grid-column: span 3 !important;
-      }
-
-      .video-section:nth-child(2n+1) {
-        grid-column: span 3 !important;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .video-stack {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-        padding: 0.5rem;
-      }
-
-      .video-section,
-      .video-section:nth-child(n) {
-        grid-column: span 1 !important;
-      }
-
-      .video-frame video:hover {
-        transform: none;
+      .video-frame {
+        flex: none;
+        width: 100%;
+        max-width: 100%;
       }
     }
 
@@ -553,7 +439,7 @@
     <!-- STICKY HERO -->
     <div class="hero-container" id="heroContainer">
       <div class="hero-content">
-        <h1 class="hero-title" id="heroTitle"></h1>
+        <h1 class="hero-title" id="heroTitle">HELLO, I'M YONATAN</h1>
         
         <div class="hero-about">
           Exploring procedural techniques in Houdini, motion design, and creative coding. Looking for technical artist internships.
@@ -601,36 +487,9 @@
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
   <script>
-    /*************************************************************
-     * 1) ANIMATE HERO TITLE with "pop in" letters
-     *************************************************************/
-    const heroTitleEl = document.getElementById('heroTitle');
-    const heroText = "HELLO, I'M YONATAN";
-
-    function setHeroTitle(text) {
-      heroTitleEl.innerHTML = "";
-      let delay = 0;
-      for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        const span = document.createElement('span');
-        span.classList.add('letter');
-        span.style.animationDelay = delay + 's';
-        span.innerText = char === " " ? "\u00A0" : char;
-        heroTitleEl.appendChild(span);
-        delay += 0.05;
-      }
-    }
-
-    setHeroTitle(heroText);
-  </script>
-
-  <script>
-    /*************************************************************
-     * 2) 4 CORNERS → CENTER CONVERGENCE
+  /*************************************************************
+   * 1) 4 CORNERS → CENTER CONVERGENCE
      *************************************************************/
     const heroContainer = document.getElementById('heroContainer');
     
@@ -649,19 +508,21 @@
   </script>
 
   <script>
-    /*************************************************************
-     * 3) BUILD VIDEO SECTIONS + POPUP METADATA WITH GSAP
-     *************************************************************/
+  /*************************************************************
+   * 2) BUILD VIDEO SECTIONS
+   *************************************************************/
     const threeDStack = document.getElementById('threeDStack');
     const touchStack = document.getElementById('touchStack');
 
-    // Video arrays
+
+
+    // Hardcoded arrays with video file names (just the base names)
     const threeDVideos = [
       'video17.mp4', 'video5.mp4', 'mov30.mp4', 'video9.mp4',
-      'video16.mp4', 'video4.mp4', 'video0.mp4', 'video11.mp4', 'video12.mp4',
+      'video16.mp4', 'video4.mp4', 'video0.mp4', /* 'video1.mp4' */, 'video11.mp4', 'video12.mp4',
       'video15.mp4', 'video8.mp4', 'video3.mp4', 'mov22.mp4', 'mov32.mp4',
       'video14.mp4', 'video6.mp4', 'mov24.mp4', 'mov33.mp4', 'video13.mp4',
-      'video10.mp4'
+      'video10.mp4', /*'video7.mp4'*/
     ];
 
     const touchVideos = [
@@ -672,6 +533,7 @@
       'Movie21.mp4',
       'Movie27.mp4',
       'Movie31.mp4',
+      // 'Movie40.mp4',
       'Movie41.mp4',
       'Movie56.mp4',
       'Movie62.mp4',
@@ -712,15 +574,16 @@
     const createdTouchVideos = touchVideos.map((videoName, index) =>
       createVideoSection(touchStack, videoName, index, 'touch')
     );
-
-    const allVids = [...createdThreeDVideos, ...createdTouchVideos];
   </script>
 
   <script>
+    // Query all videos AFTER they're in the DOM
+    const allVids = document.querySelectorAll('.rect-video');
+
     /*************************************************************
-     * 4) HOVER-TO-PLAY => Desktop
-     *************************************************************/
-    allVids.forEach(video => {
+     * 3) HOVER-TO-PLAY => Desktop
+     *************************************************************/ 
+    allVids.forEach((video, idx) => {
       video.addEventListener('mouseover', e => {
         const vid = e.currentTarget;
         vid.muted = true;
@@ -732,11 +595,9 @@
         catch(err) { if (err.name !== "AbortError") console.log(err); }
       });
     });
-  </script>
 
-  <script>
     /*************************************************************
-     * 5) DESKTOP OVERLAY => click
+     * 4) DESKTOP OVERLAY => click
      *************************************************************/
     const desktopOverlay = document.getElementById('desktopOverlay');
     const overlayVideo = document.getElementById('overlayVideo');
@@ -759,11 +620,9 @@
       overlayVideo.pause();
       overlayVideo.src = "";
     });
-  </script>
 
-  <script>
     /*************************************************************
-     * 6) MOBILE PRESS-AND-HOLD => play
+     * 5) MOBILE PRESS-AND-HOLD => play
      *************************************************************/
     let mediaQuery = window.matchMedia('(max-width: 600px)');
     function handleMobileHold(mq) {
@@ -813,15 +672,13 @@
     function onTouchEnd(e) {
       clearTimeout(timer);
       const vid = e.currentTarget;
-      if (isPlaying) {
-        try { vid.pause(); }
-        catch(err) { if (err.name !== "AbortError") console.log(err); }
+      if (!isPlaying) {
+        vid.pause();
       }
-      isPlaying = false;
     }
 
     handleMobileHold(mediaQuery);
-    mediaQuery.addEventListener('change', handleMobileHold);
+    mediaQuery.addListener(handleMobileHold);
   </script>
 </body>
 </html>
