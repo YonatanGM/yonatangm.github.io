@@ -388,20 +388,48 @@
     }
 
     .video-stack {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: clamp(0.5rem, 1vw, 1.5rem);
+      padding: clamp(1rem, 2vw, 3rem);
       margin: 0;
-      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
     }
 
     .video-section {
       position: relative;
+      grid-column: span 6;
       display: block;
       width: 100%;
       margin: 0;
       padding: 0;
       line-height: 0;
     }
+
+    /* Create interesting patterns - hero, single, pair, hero, etc */
+    .video-section:nth-child(1) { grid-column: span 12; }  /* Hero */
+    .video-section:nth-child(2) { grid-column: span 6; }
+    .video-section:nth-child(3) { grid-column: span 6; }
+    .video-section:nth-child(4) { grid-column: span 8; }   /* Large */
+    .video-section:nth-child(5) { grid-column: span 4; }   /* Small */
+    .video-section:nth-child(6) { grid-column: span 12; }  /* Hero */
+    .video-section:nth-child(7) { grid-column: span 5; }
+    .video-section:nth-child(8) { grid-column: span 7; }
+    .video-section:nth-child(9) { grid-column: span 6; }
+    .video-section:nth-child(10) { grid-column: span 6; }
+    .video-section:nth-child(11) { grid-column: span 8; }
+    .video-section:nth-child(12) { grid-column: span 4; }
+    .video-section:nth-child(13) { grid-column: span 12; }
+    .video-section:nth-child(14) { grid-column: span 7; }
+    .video-section:nth-child(15) { grid-column: span 5; }
+
+    /* Continue pattern for more videos */
+    .video-section:nth-child(n+16):nth-child(4n+1) { grid-column: span 12; }
+    .video-section:nth-child(n+16):nth-child(4n+2) { grid-column: span 6; }
+    .video-section:nth-child(n+16):nth-child(4n+3) { grid-column: span 6; }
+    .video-section:nth-child(n+16):nth-child(4n) { grid-column: span 8; }
 
     .video-section + .video-section {
       border-top: none;
@@ -410,80 +438,60 @@
     .video-frame {
       position: relative;
       width: 100%;
-      display: block;
       line-height: 0;
     }
 
     .video-frame video {
-      width: auto;
-      max-width: 1080px;
+      width: 100%;
       height: auto;
       display: block;
-      object-fit: contain;
-      box-shadow: none;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .video-frame video:hover {
+      transform: scale(1.02);
     }
     
     /* Exception for widescreen video */
     .video-frame video[src*="mov24"] {
-      max-width: 100vw;
-    }
-
-    .popup-rail {
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 100vw;
-      height: 100%;
-      min-height: 100vh;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      padding-right: 10vw;
-      pointer-events: none;
-    }
-
-    .popup-rail::before {
-      content: '';
-      position: absolute;
-      inset: 12% 8%;
-      border: 1px dashed rgba(255, 255, 255, 0.08);
-      border-radius: 0;
-      pointer-events: none;
-    }
-
-    .popup-item {
-      position: absolute;
-      border-radius: 0;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
-      transform: translate(-50%, -50%) scale(0);
-      transform-origin: center;
-      opacity: 0;
-      will-change: transform, opacity;
+      width: 100%;
     }
 
     @media (max-width: 1024px) {
-      .video-section {
-        flex-direction: column;
-        padding: 0 4vw 6vh;
-        min-height: auto;
+      .video-stack {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 0.75rem;
       }
 
-      .video-frame {
-        flex: none;
-        width: 100%;
-        max-width: 100%;
+      .video-section,
+      .video-section:nth-child(n) {
+        grid-column: span 6 !important;
       }
 
-      .popup-rail {
-        width: 100%;
-        min-height: 320px;
-        height: auto;
-        padding: 3rem 0;
+      .video-section:nth-child(2n) {
+        grid-column: span 3 !important;
       }
 
-      .popup-rail::before {
-        inset: 18% 20%;
+      .video-section:nth-child(2n+1) {
+        grid-column: span 3 !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .video-stack {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 0.5rem;
+      }
+
+      .video-section,
+      .video-section:nth-child(n) {
+        grid-column: span 1 !important;
+      }
+
+      .video-frame video:hover {
+        transform: none;
       }
     }
 
@@ -647,44 +655,14 @@
     const threeDStack = document.getElementById('threeDStack');
     const touchStack = document.getElementById('touchStack');
 
-    const gradients = [
-      'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-      'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-      'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-      'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
-    ];
-
-    const popupConfig = {
-      threeD: {
-        1: [
-          { size: 190, background: gradients[3], top: 38, left: 82, scale: 1.15 }
-        ],
-        4: [
-          { size: 240, background: gradients[1], top: 32, left: 80, scale: 1.1 },
-          { size: 200, background: gradients[0], top: 60, left: 90, scale: 0.9 }
-        ],
-        7: [
-          { size: 220, background: gradients[2], top: 40, left: 84, scale: 1.05 },
-          { size: 180, background: gradients[3], top: 24, left: 92, scale: 0.9 }
-        ]
-      },
-      touch: {
-        3: [
-          { size: 220, background: gradients[0], top: 34, left: 82, scale: 1.05 }
-        ]
-      }
-    };
-
-    // Hardcoded arrays with video file names (just the base names)
+    // Video arrays
     const threeDVideos = [
-      'video12.mp4', 'video9.mp4',  'video13.mp4', 'mov32.mp4', 'video11.mp4', 'mov30.mp4', 'mov33.mp4', 'mov22.mp4',
-      'video0.mp4', 'mov24.mp4',
-      'video3.mp4', 'video4.mp4', 'video5.mp4',
-      'video6.mp4', 'video8.mp4', 'video10.mp4',
-      'video14.mp4',
-      'video15.mp4', 'video16.mp4', 'video17.mp4'
-    ].reverse();
+      'video17.mp4', 'video5.mp4', 'mov30.mp4', 'video9.mp4',
+      'video16.mp4', 'video4.mp4', 'video0.mp4', 'video11.mp4', 'video12.mp4',
+      'video15.mp4', 'video8.mp4', 'video3.mp4', 'mov22.mp4', 'mov32.mp4',
+      'video14.mp4', 'video6.mp4', 'mov24.mp4', 'mov33.mp4', 'video13.mp4',
+      'video10.mp4'
+    ];
 
     const touchVideos = [
       'Movie99.mp4',
@@ -700,31 +678,6 @@
       'Movie9.mp4',
       'Movie42.mp4'
     ];
-
-    const sectionsWithPopups = [];
-
-    function clamp(value, min, max) {
-      return Math.min(Math.max(value, min), max);
-    }
-
-    function createPopupElement(spec, index) {
-      const element = document.createElement('div');
-      element.className = 'popup-item';
-      element.style.width = `${spec.size}px`;
-      element.style.height = `${spec.size}px`;
-      element.style.background = spec.background || gradients[index % gradients.length];
-
-      const jitter = ((index * 11) % 6) - 3;
-      const top = clamp(spec.top + jitter, 18, 82);
-      const left = clamp(spec.left + jitter * 0.6, 68, 92);
-
-      element.style.top = `${top}%`;
-      element.style.left = `${left}%`;
-
-      element.dataset.targetScale = spec.scale ?? 1;
-
-      return element;
-    }
 
     function createVideoSection(stack, src, index, category) {
       const section = document.createElement('section');
@@ -746,23 +699,8 @@
       video.load();
       frame.appendChild(video);
 
-      const rail = document.createElement('div');
-      rail.className = 'popup-rail';
-
-      const popupSpecs = (popupConfig[category] && popupConfig[category][index]) || [];
-      const popupElements = popupSpecs.map((spec, popupIndex) => {
-        const popup = createPopupElement(spec, popupIndex);
-        rail.appendChild(popup);
-        return popup;
-      });
-
       section.appendChild(frame);
-      section.appendChild(rail);
       stack.appendChild(section);
-
-      if (popupElements.length) {
-        sectionsWithPopups.push({ section, popupElements });
-      }
 
       return video;
     }
@@ -776,74 +714,6 @@
     );
 
     const allVids = [...createdThreeDVideos, ...createdTouchVideos];
-
-    // Initialize GSAP ScrollTrigger for scroll-jacked popups
-    if (window.gsap && window.ScrollTrigger) {
-      gsap.registerPlugin(ScrollTrigger);
-
-      sectionsWithPopups.forEach(({ section, popupElements }) => {
-        // Set initial state
-        popupElements.forEach(popup => {
-          gsap.set(popup, {
-            scale: 0,
-            autoAlpha: 0
-          });
-        });
-
-        const timeline = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: 'top top',
-            end: `+=${Math.max(1, popupElements.length) * 500}`,
-            scrub: 1,
-            pin: true,
-            pinSpacing: true,
-            anticipatePin: 0.5,
-            invalidateOnRefresh: true
-          }
-        });
-
-        popupElements.forEach((popup, idx) => {
-          const targetScale = parseFloat(popup.dataset.targetScale || '1');
-          const position = idx * 1.2;
-
-          // Scale in
-          timeline.fromTo(popup,
-            {
-              scale: 0,
-              autoAlpha: 0
-            },
-            {
-              scale: targetScale,
-              autoAlpha: 1,
-              duration: 1.5,
-              ease: 'power2.out'
-            },
-            position
-          );
-
-          // Subtle pulse
-          timeline.to(popup, {
-            scale: targetScale * 1.08,
-            duration: 0.8,
-            ease: 'sine.inOut',
-            yoyo: true,
-            repeat: 1
-          }, position + 0.6);
-        });
-
-        // Scale out all
-        timeline.to(popupElements, {
-          scale: 0,
-          autoAlpha: 0,
-          duration: 0.8,
-          ease: 'power2.in',
-          stagger: { each: 0.12, from: 'end' }
-        }, '+=0.8');
-      });
-
-      ScrollTrigger.refresh();
-    }
   </script>
 
   <script>
