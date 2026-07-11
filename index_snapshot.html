@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Yonatan Mamo</title>
+
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* BODY => Clean, minimal */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+      background-color: #000000;
+      color: #ffffff;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /************************************************************
+     * A) PAGE WRAPPER => Full bleed
+     ************************************************************/
+    .page-wrapper {
+      width: 100%;
+      position: relative;
+    }
+
+    /************************************************************
+     * BLEND MODE TEXT HEADER - editorial fixed edges
+     ************************************************************/
+    
+    body {
+      position: relative;
+    }
+    
+    /* Page wrapper - content scrolls normally */
+    .page-wrapper {
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Hero container - manages all fixed elements */
+    .hero-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+      pointer-events: none;
+      mix-blend-mode: difference;
+    }
+    
+    /* Individual elements positioned at edges */
+    .hero-title,
+    .hero-side {
+      position: fixed;
+      transition: none;
+    }
+    
+    /* Make interactive elements clickable */
+    .hero-container a,
+    .hero-container button {
+      pointer-events: auto;
+    }
+
+    /* NAME - Top-left corner */
+    .hero-title {
+      top: 2rem;
+      left: 2rem;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.01em;
+      margin: 0;
+      line-height: 1;
+      white-space: nowrap;
+      opacity: 0.96;
+    }
+    
+    .hero-container.centered .hero-title {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -180px);
+      font-size: 4rem;
+    }
+
+    .hero-title .letter {
+      display: inline-block;
+      opacity: 0;
+      animation: explodeLetter 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      position: relative;
+    }
+    
+    /* Each letter explodes from different directions */
+    .hero-title .letter:nth-child(1) { animation-delay: 0s; --explode-x: -200px; --explode-y: -100px; --explode-rotate: -180deg; }
+    .hero-title .letter:nth-child(2) { animation-delay: 0.1s; --explode-x: 150px; --explode-y: -150px; --explode-rotate: 120deg; }
+    .hero-title .letter:nth-child(3) { animation-delay: 0.2s; --explode-x: -180px; --explode-y: 120px; --explode-rotate: -90deg; }
+    .hero-title .letter:nth-child(4) { animation-delay: 0.3s; --explode-x: 200px; --explode-y: -80px; --explode-rotate: 240deg; }
+    .hero-title .letter:nth-child(5) { animation-delay: 0.4s; --explode-x: -120px; --explode-y: 150px; --explode-rotate: -220deg; }
+    .hero-title .letter:nth-child(6) { animation-delay: 0.5s; --explode-x: 180px; --explode-y: 100px; --explode-rotate: 160deg; }
+    .hero-title .letter:nth-child(7) { animation-delay: 0.6s; --explode-x: -150px; --explode-y: -120px; --explode-rotate: -270deg; }
+    .hero-title .letter:nth-child(8) { animation-delay: 0.7s; --explode-x: 100px; --explode-y: 140px; --explode-rotate: 200deg; }
+    .hero-title .letter:nth-child(9) { animation-delay: 0.8s; --explode-x: -100px; --explode-y: -140px; --explode-rotate: -120deg; }
+    .hero-title .letter:nth-child(10) { animation-delay: 0.9s; --explode-x: 140px; --explode-y: -100px; --explode-rotate: 300deg; }
+    .hero-title .letter:nth-child(11) { animation-delay: 1s; --explode-x: -140px; --explode-y: 100px; --explode-rotate: -150deg; }
+    .hero-title .letter:nth-child(12) { animation-delay: 1.1s; --explode-x: 160px; --explode-y: 120px; --explode-rotate: 140deg; }
+    .hero-title .letter:nth-child(13) { animation-delay: 1.2s; --explode-x: -160px; --explode-y: -90px; --explode-rotate: -200deg; }
+    .hero-title .letter:nth-child(14) { animation-delay: 1.3s; --explode-x: 120px; --explode-y: 90px; --explode-rotate: 180deg; }
+    .hero-title .letter:nth-child(15) { animation-delay: 1.4s; --explode-x: -90px; --explode-y: 130px; --explode-rotate: -100deg; }
+    .hero-title .letter:nth-child(16) { animation-delay: 1.5s; --explode-x: 130px; --explode-y: -130px; --explode-rotate: 220deg; }
+    .hero-title .letter:nth-child(17) { animation-delay: 1.6s; --explode-x: -130px; --explode-y: 80px; --explode-rotate: -240deg; }
+    .hero-title .letter:nth-child(18) { animation-delay: 1.7s; --explode-x: 110px; --explode-y: -110px; --explode-rotate: 260deg; }
+
+    @keyframes explodeLetter {
+      0% {
+        transform: translate(var(--explode-x), var(--explode-y)) rotate(var(--explode-rotate)) scale(0.2);
+        opacity: 0;
+      }
+      60% {
+        transform: translate(0, 0) rotate(calc(var(--explode-rotate) * 0.1)) scale(1.15);
+        opacity: 1;
+      }
+      80% {
+        transform: translate(0, 0) rotate(calc(var(--explode-rotate) * -0.05)) scale(0.95);
+      }
+      100% { 
+        transform: translate(0, 0) rotate(0deg) scale(1);
+        opacity: 1;
+      }
+    }
+    
+    /* Subtle floating animation after letters settle */
+    .hero-title .letter {
+      animation: explodeLetter 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+                 floatLetter 3s ease-in-out 2s infinite;
+    }
+    
+    @keyframes floatLetter {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      25% {
+        transform: translateY(-3px) rotate(1deg);
+      }
+      50% {
+        transform: translateY(0) rotate(0deg);
+      }
+      75% {
+        transform: translateY(3px) rotate(-1deg);
+      }
+    }
+    
+    /* Different float timing for each letter */
+    .hero-title .letter:nth-child(odd) {
+      animation-delay: 0s, 2.2s;
+    }
+    .hero-title .letter:nth-child(even) {
+      animation-delay: 0s, 2.5s;
+    }
+    
+    /* BIO / CONTACT - right-edge editorial column */
+    .hero-side {
+      top: 50%;
+      right: 2.2rem;
+      transform: translateY(-48%);
+      width: min(42vw, 560px);
+      color: #ffffff;
+      text-align: right;
+    }
+
+    .hero-about {
+      line-height: 1.22;
+      font-size: clamp(1.05rem, 1.35vw, 1.42rem);
+      color: #ffffff;
+      font-weight: 500;
+      letter-spacing: -0.015em;
+      opacity: 0.94;
+    }
+
+    .hero-about p + p {
+      margin-top: 0.9rem;
+    }
+
+    .contact-row {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-end;
+      gap: 0.38rem;
+      margin-top: 1.05rem;
+    }
+
+    .contact-row a {
+      color: #ffffff;
+      font-size: clamp(1.05rem, 1.35vw, 1.42rem);
+      font-weight: 500;
+      letter-spacing: -0.015em;
+      line-height: 1.22;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.75);
+      padding-bottom: 0.08rem;
+      transition: opacity 0.25s ease, border-color 0.25s ease;
+      opacity: 0.86;
+    }
+
+    .contact-row a:hover {
+      border-bottom-color: transparent;
+      opacity: 1;
+    }
+    
+    .hero-container.centered .hero-about {
+      bottom: 50%;
+      left: 50%;
+      transform: translate(-50%, 80px);
+      font-size: 1rem;
+      max-width: 600px;
+      text-align: center;
+    }
+    
+    @media (max-width: 1024px) {
+      .hero-title {
+        font-size: 1.55rem;
+        top: 1.8rem;
+        left: 1.8rem;
+      }
+      
+      .hero-container.centered .hero-title {
+        font-size: 3rem;
+      }
+      
+      .hero-side {
+        right: 2rem;
+        width: min(46vw, 500px);
+      }
+      
+      .hero-about {
+        font-size: clamp(0.98rem, 1.5vw, 1.24rem);
+      }
+
+      .contact-row a {
+        font-size: clamp(0.98rem, 1.5vw, 1.24rem);
+      }
+      
+      .hero-container.centered .hero-about {
+        font-size: 0.9rem;
+        max-width: 500px;
+      }
+      
+    }
+    
+    @media (max-width: 768px) {
+      /* Keep the same editorial overlay on mobile, just compressed. */
+      .hero-container {
+        position: fixed;
+        mix-blend-mode: difference;
+        background: transparent;
+        border-bottom: 0;
+        padding: 0;
+      }
+      
+      .hero-title,
+      .hero-side {
+        position: fixed;
+        transform: none;
+      }
+      
+      .hero-title {
+        top: 0.95rem;
+        left: 0.95rem;
+        font-size: 1rem;
+        margin-bottom: 0;
+        text-align: left;
+      }
+
+      .hero-side {
+        top: auto;
+        right: 0.95rem;
+        bottom: 0.95rem;
+        width: min(90vw, 22rem);
+        text-align: right;
+        margin-bottom: 0;
+      }
+      
+      .hero-about {
+        font-size: clamp(0.72rem, 3vw, 0.86rem);
+        line-height: 1.24;
+        max-width: 100%;
+        text-align: right;
+      }
+
+      .hero-about p + p {
+        margin-top: 0.55rem;
+      }
+      
+      .contact-row {
+        justify-content: flex-end;
+        align-items: flex-end;
+        margin-top: 0.65rem;
+        gap: 0.26rem;
+      }
+      
+      .contact-row a {
+        font-size: clamp(0.72rem, 3vw, 0.86rem);
+      }
+      
+    }
+
+    /************************************************************
+     * SECTION CARDS - SCROLL-SHUFFLE VIEWPORT
+     ************************************************************/
+    .section-card {
+      position: relative;
+      min-height: 500vh; /* Long scroll for shuffling effect */
+      background-color: #000000;
+      border: none;
+    }
+    
+    /* Fixed viewport for jumbled video cards */
+    .video-viewport {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+    }
+    
+    /* Video card - jumbled, overlapping */
+    .video-card {
+      position: absolute;
+      width: clamp(250px, 30vw, 400px);
+      height: auto;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: auto;
+      cursor: pointer;
+      opacity: 0;
+    }
+    
+    .video-card.visible {
+      opacity: 1;
+    }
+    
+    .video-card video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    .video-card:hover {
+      z-index: 100 !important;
+      transform: scale(1.08) !important;
+      box-shadow: 0 20px 60px rgba(255, 255, 255, 0.3);
+    }
+
+    .refined-append-media {
+      width: 100%;
+      clear: both;
+    }
+
+    .append-media-item {
+      display: block;
+      line-height: 0;
+    }
+
+    .append-media-item video,
+    .append-media-item img {
+      display: block;
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    /* Overlay Styling */
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.95); /* Light overlay */
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .overlay.active {
+      display: flex;
+    }
+    .overlay-content {
+      position: relative;
+      background-color: #ffffff; /* White background */
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 90%;
+      max-height: 85vh;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    .overlay-content video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+    }
+    .close-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background-color: #e0e0e0; /* Light gray */
+      color: #2c2c2c; /* Dark text */
+      border: none;
+      font-size: 1rem;
+      padding: 0.3rem 0.6rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    .close-btn:hover {
+      background-color: #c0c0c0; /* Darker gray on hover */
+    }
+  </style>
+</head>
+<body>
+  <!-- PAGE WRAPPER for white side margins -->
+  <div class="page-wrapper">
+
+    <!-- STICKY HERO -->
+    <div class="hero-container" id="heroContainer">
+      <div class="hero-content">
+        <h1 class="hero-title" id="heroTitle">YONATAN MAMO</h1>
+        
+        <div class="hero-side">
+          <div class="hero-about">
+            <p>I recently completed a master’s degree in computer science. This site collects personal 3D, motion, and visual projects made with Houdini, TouchDesigner, and code.</p>
+            <p>Looking for technical artist roles.</p>
+          </div>
+
+          <div class="contact-row">
+            <a href="https://www.linkedin.com/in/yonatan-mamo-07b426137/" target="_blank" aria-label="LinkedIn">LinkedIn</a>
+            <a href="https://github.com/YonatanGM" target="_blank" aria-label="GitHub">GitHub</a>
+            <a href="https://www.behance.net/yonatanmamo" target="_blank" aria-label="Behance">Behance</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 3D CARD (Soft Neutral) -->
+    <div class="section-card card-3d" id="card3D">
+      <!-- Removed section-title as per user request -->
+      <div class="multi-column" id="multiCol3D">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+      </div>
+      <div class="refined-append-media" id="refinedAppendMedia"></div>
+    </div>
+
+    <!-- TOUCH CARD (Soft Neutral) -->
+    <div class="section-card card-touch" id="cardTouch">
+      <!-- Removed section-title as per user request -->
+      <div class="multi-column" id="multiColTouch">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+      </div>
+    </div>
+  </div> <!-- end page-wrapper -->
+
+  <!-- DESKTOP OVERLAY -->
+  <div class="overlay" id="desktopOverlay">
+    <div class="overlay-content">
+      <button class="close-btn" id="closeBtn">X</button>
+      <video id="overlayVideo" controls></video>
+    </div>
+  </div>
+
+  <script>
+    /*************************************************************
+     * 3) CREATE & LAZY-LOAD videos for 3D & Touch
+     *************************************************************/
+    const threeDCount = 18;
+    const touchCount = 18;
+    const multiCol3D = document.getElementById('multiCol3D').children;
+    const multiColTouch = document.getElementById('multiColTouch').children;
+    const refinedAppendContainer = document.getElementById('refinedAppendMedia');
+
+    // Hardcoded arrays with video file names (just the base names)
+    const threeDVideos = [
+      "video12.mp4", "video9.mp4",  "video13.mp4", "mov32.mp4", "video11.mp4", "mov30.mp4", "mov33.mp4", "mov22.mp4",
+      "video0.mp4", /* "video1.mp4" */, "mov24.mp4",
+      "video3.mp4", "video4.mp4", "video5.mp4",
+      null /* "video6.mp4" */, "video8.mp4", "video10.mp4",
+      /*"video7.mp4"*/, "video14.mp4",
+      "video15.mp4", "video16.mp4", "video17.mp4",
+    ].reverse();
+
+    const touchVideos = [
+      "Movie99.mp4",
+      "Movie10.mp4",
+      "Movie11.mp4",
+      "Movie18.mp4",
+      "Movie21.mp4",
+      "Movie27.mp4",
+      "Movie31.mp4",
+      // "Movie40.mp4",
+      "Movie41.mp4",
+      "Movie56.mp4",
+      "Movie62.mp4",
+      "Movie9.mp4",
+      "Movie42.mp4"
+    ];
+
+    const refinedAppendMedia = [
+      // { type: 'video', src: 'extended/0010001-0159.mp4' },
+      // { type: 'image', src: 'extended/0090.png' },
+      { type: 'video', src: 'extended/frame0001-0180.mp4' },
+      { type: 'video', src: 'extended/mov000001-0125.mp4' },
+      { type: 'video', src: 'extended2/edgebunding.mp4', startTime: 10 },
+      // { type: 'video', src: 'extended/movX0001-0180.mp4' },
+      // { type: 'video', src: 'extended/movY0001-0180.mp4' },
+      // { type: 'video', src: 'extended/movZ20001-0200.mp4' },
+      // { type: 'image', src: 'extended2/00.540.PNG' },
+      { type: 'video', src: 'extended2/blue-orange0001-0091.MP4', scale: 0.7 },
+      // { type: 'image', src: 'extended2/IMG_0002.PNG' },
+      { type: 'image', src: 'extended2/IMG_0003.PNG' },
+      { type: 'image', src: 'extended2/03.574.PNG' },
+      { type: 'video', src: 'extended2/copy_96E56E82-054C-4AB5-8F77-3C13B9335D0D.mov' },
+      { type: 'image', src: 'extended2/IMG_1287.PNG' },
+      { type: 'image', src: 'extended2/IMG_1401.jpg' },
+      { type: 'image', src: 'extended2/IMG_1402.PNG' },
+      { type: 'image', src: 'extended2/IMG_1836.jpg' },
+      { type: 'image', src: 'extended2/IMG_2805.jpg' },
+      { type: 'image', src: 'extended2/untitled0.647.PNG' },
+      { type: 'video', src: 'extended2/video0(1).MP4' },
+      { type: 'video', src: 'extended2/test30001-0525(2).MP4', endTime: 12 }
+    ];
+
+    function applyScatter(element) {
+      const scatterX = (Math.random() - 0.5) * 800;
+      const scatterY = (Math.random() - 0.5) * 600;
+      const scatterRotate = (Math.random() - 0.5) * 180;
+
+      element.style.setProperty('--scatter-x', `${scatterX}px`);
+      element.style.setProperty('--scatter-y', `${scatterY}px`);
+      element.style.setProperty('--scatter-rotate', `${scatterRotate}deg`);
+    }
+
+    function hasSegmentValue(value) {
+      return value !== undefined && value !== '';
+    }
+
+    function getSegmentStart(video) {
+      return hasSegmentValue(video.dataset.startTime) ? Number(video.dataset.startTime) : 0;
+    }
+
+    function getSegmentEnd(video) {
+      return hasSegmentValue(video.dataset.endTime) ? Number(video.dataset.endTime) : null;
+    }
+
+    function seekVideoStart(video) {
+      if (!hasSegmentValue(video.dataset.startTime) && !hasSegmentValue(video.dataset.endTime)) return;
+
+      const seek = () => {
+        const startTime = getSegmentStart(video);
+        video.currentTime = Math.min(startTime, Math.max(video.duration - 0.05, 0));
+      };
+
+      if (video.readyState >= 1) {
+        seek();
+      } else {
+        video.addEventListener('loadedmetadata', seek, { once: true });
+      }
+    }
+
+    function bindVideoSegment(video) {
+      if (video.dataset.segmentBound) return;
+
+      video.dataset.segmentBound = 'true';
+      video.addEventListener('timeupdate', () => {
+        const endTime = getSegmentEnd(video);
+        if (endTime === null || !Number.isFinite(endTime)) return;
+
+        if (video.currentTime >= endTime) {
+          video.pause();
+          video.currentTime = getSegmentStart(video);
+        }
+      });
+    }
+
+    // Fill 3D videos with random scatter positions
+    threeDVideos.forEach((video, index) => {
+      if (!video) return;
+
+      const vid = document.createElement('video');
+      vid.className = 'rect-video';
+      vid.dataset.src = `assets/${video}`;
+      vid.preload = 'auto';
+      vid.muted = true;
+      vid.playsInline = true;
+      vid.loading = 'lazy';
+      
+      // Random scatter position
+      const scatterX = (Math.random() - 0.5) * 800; // -400 to 400
+      const scatterY = (Math.random() - 0.5) * 600; // -300 to 300
+      const scatterRotate = (Math.random() - 0.5) * 180; // -90 to 90
+      
+      vid.style.setProperty('--scatter-x', `${scatterX}px`);
+      vid.style.setProperty('--scatter-y', `${scatterY}px`);
+      vid.style.setProperty('--scatter-rotate', `${scatterRotate}deg`);
+      
+      multiCol3D[index % 4].appendChild(vid);
+    });
+
+    refinedAppendMedia.forEach((item, index) => {
+      const section = document.createElement('section');
+      section.className = 'append-media-item';
+      section.dataset.index = index;
+      if (typeof item.scale === 'number') {
+        section.style.width = `${item.scale * 100}%`;
+      }
+
+      const element = document.createElement(item.type === 'video' ? 'video' : 'img');
+      const sourcePath = `assets/${item.src}`;
+
+      if (item.type === 'video') {
+        element.className = 'rect-video';
+        element.dataset.src = sourcePath;
+        element.preload = 'auto';
+        element.muted = true;
+        element.playsInline = true;
+        element.loading = 'lazy';
+        if (typeof item.startTime === 'number') {
+          element.dataset.startTime = String(item.startTime);
+        }
+        if (typeof item.endTime === 'number') {
+          element.dataset.endTime = String(item.endTime);
+        }
+        bindVideoSegment(element);
+        seekVideoStart(element);
+      } else {
+        element.className = 'rect-image';
+        element.src = sourcePath;
+        element.alt = '';
+        element.loading = 'lazy';
+      }
+
+      section.appendChild(element);
+      refinedAppendContainer.appendChild(section);
+    });
+
+    // Fill Touch videos with random scatter positions
+    touchVideos.forEach((video, index) => {
+      const vid = document.createElement('video');
+      vid.className = 'rect-video';
+      vid.dataset.src = `assets/${video}`;
+      vid.preload = 'auto';
+      vid.muted = true;
+      vid.playsInline = true;
+      vid.loading = 'lazy';
+      applyScatter(vid);
+      
+      multiColTouch[index % 4].appendChild(vid);
+    });
+
+    const allVids = document.querySelectorAll('.rect-video');
+  </script>
+
+  <script>
+    /*************************************************************
+     * 4) LAZY LOADING + SCATTER-TO-GRID ANIMATION
+     *************************************************************/
+    const lazyObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const vid = entry.target;
+          
+          // Load video
+          if (vid.dataset.src) {
+            vid.src = vid.dataset.src;
+            vid.load();
+          }
+          
+          // Trigger organization animation with stagger
+          setTimeout(() => {
+            vid.classList.add('organized');
+          }, Math.random() * 600); // Random stagger 0-600ms
+          
+          lazyObserver.unobserve(vid);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '100px'
+    });
+    
+    allVids.forEach(vid => lazyObserver.observe(vid));
+  </script>
+
+  <script>
+    /*************************************************************
+     * 5) HOVER-TO-PLAY => Desktop
+     *************************************************************/
+    allVids.forEach(video => {
+      video.addEventListener('mouseover', e => {
+        e.currentTarget.muted = true;
+        bindVideoSegment(e.currentTarget);
+        seekVideoStart(e.currentTarget);
+        try { e.currentTarget.play(); }
+        catch(err) { if (err.name !== "AbortError") console.log(err); }
+      });
+      video.addEventListener('mouseleave', e => {
+        try { e.currentTarget.pause(); }
+        catch(err) { if (err.name !== "AbortError") console.log(err); }
+      });
+    });
+  </script>
+
+  <script>
+    /*************************************************************
+     * 6) DESKTOP OVERLAY => click
+     *************************************************************/
+    const desktopOverlay = document.getElementById('desktopOverlay');
+    const overlayVideo = document.getElementById('overlayVideo');
+    const closeBtn = document.getElementById('closeBtn');
+
+    function handleDesktopClick(e) {
+      if (window.innerWidth >= 1024) {
+        desktopOverlay.classList.add('active');
+        const sourceVideo = e.currentTarget;
+        overlayVideo.src = sourceVideo.src;
+        if (hasSegmentValue(sourceVideo.dataset.startTime)) {
+          overlayVideo.dataset.startTime = sourceVideo.dataset.startTime;
+        } else {
+          delete overlayVideo.dataset.startTime;
+        }
+        if (hasSegmentValue(sourceVideo.dataset.endTime)) {
+          overlayVideo.dataset.endTime = sourceVideo.dataset.endTime;
+        } else {
+          delete overlayVideo.dataset.endTime;
+        }
+        bindVideoSegment(overlayVideo);
+        overlayVideo.load();
+        overlayVideo.addEventListener('loadedmetadata', () => {
+          seekVideoStart(overlayVideo);
+          overlayVideo.play();
+        }, { once: true });
+      }
+    }
+    allVids.forEach(video => {
+      video.addEventListener('click', handleDesktopClick);
+    });
+
+    closeBtn.addEventListener('click', () => {
+      desktopOverlay.classList.remove('active');
+      overlayVideo.pause();
+      overlayVideo.src = "";
+      delete overlayVideo.dataset.startTime;
+      delete overlayVideo.dataset.endTime;
+    });
+  </script>
+
+  <script>
+    /*************************************************************
+     * 7) MOBILE PRESS-AND-HOLD => play
+     *************************************************************/
+    let mediaQuery = window.matchMedia('(max-width: 600px)');
+    function handleMobileHold(mq) {
+      allVids.forEach(video => {
+        // Remove old
+        video.removeEventListener('touchstart', onTouchStart);
+        video.removeEventListener('touchmove', onTouchMove);
+        video.removeEventListener('touchend', onTouchEnd);
+        if (mq.matches) {
+          video.addEventListener('touchstart', onTouchStart);
+          video.addEventListener('touchmove', onTouchMove);
+          video.addEventListener('touchend', onTouchEnd);
+        }
+      });
+    }
+
+    let timer = null;
+    let startX = 0, startY = 0;
+    const threshold = 10;
+    const holdTime = 500;
+    let isPlaying = false;
+
+    function onTouchStart(e) {
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+      isPlaying = false;
+
+      const vid = e.currentTarget;
+      timer = setTimeout(() => {
+        try {
+          bindVideoSegment(vid);
+          seekVideoStart(vid);
+          vid.play();
+          isPlaying = true;
+        } catch(err) { if (err.name !== "AbortError") console.log(err); }
+      }, holdTime);
+    }
+
+    function onTouchMove(e) {
+      const touch = e.touches[0];
+      const deltaX = Math.abs(touch.clientX - startX);
+      const deltaY = Math.abs(touch.clientY - startY);
+      if (deltaX > threshold || deltaY > threshold) {
+        clearTimeout(timer);
+      }
+    }
+
+    function onTouchEnd(e) {
+      clearTimeout(timer);
+      const vid = e.currentTarget;
+      if (isPlaying) {
+        try { vid.pause(); }
+        catch(err) { if (err.name !== "AbortError") console.log(err); }
+      }
+      isPlaying = false;
+    }
+
+    handleMobileHold(mediaQuery);
+    mediaQuery.addEventListener('change', handleMobileHold);
+  </script>
+</body>
+</html>
