@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
   <title>Yonatan Mamo</title>
 
   <style>
@@ -385,6 +385,47 @@
       object-fit: contain;
     }
 
+    @media (max-width: 768px) {
+      html,
+      body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .page-wrapper,
+      .section-card,
+      .multi-column,
+      .col,
+      .refined-append-media,
+      .append-media-item {
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+
+      .section-card {
+        min-height: auto;
+      }
+
+      .append-media-item {
+        width: 100% !important;
+      }
+
+      .rect-video,
+      .rect-image,
+      .append-media-item video,
+      .append-media-item img {
+        display: block;
+        width: 100%;
+        max-width: 100vw;
+        height: auto;
+        max-height: 78vh;
+        max-height: 78svh;
+        object-fit: contain;
+      }
+    }
+
     /* Overlay Styling */
     .overlay {
       position: fixed;
@@ -551,7 +592,8 @@
       { type: 'image', src: 'extended2/IMG_2805.jpg' },
       { type: 'image', src: 'extended2/untitled0.647.PNG' },
       { type: 'video', src: 'extended2/video0(1).MP4' },
-      { type: 'video', src: 'extended2/test30001-0525(2).MP4', endTime: 12 }
+      { type: 'video', src: 'extended2/test30001-0525(2).MP4', endTime: 12 },
+      { type: 'video', src: 't00001-0900.mp4' }
     ];
 
     function applyScatter(element) {
